@@ -2,9 +2,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const path = require('path');           
+const PORT = process.env.PORT || 5000;
+
 const app = express();
+
+app.set('port', (process.env.PORT || 5000));
 app.use(cors());
 app.use(bodyParser.json());
+
+require('dotenv').config();
+const url = process.env.MONGODB_URI;
+const MongoClient = require('mongodb').MongoClient; 
+const client = new MongoClient(url);
+client.connect();
 
 var cardList =
 [
@@ -162,6 +173,33 @@ app.post('/api/login', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/register', async (req, res, next) =>
+{
+  // incoming: login, password
+  // outgoing: id, firstName, lastName, error
+
+  var error = '';
+
+  const { login, password } = req.body;
+
+  const db = client.db("COP4331");
+  const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
+
+  var id = -1;
+  var fn = '';
+  var ln = '';
+
+  if( results.length > 0 )
+  {
+    id = results[0].UserID;
+    fn = results[0].FirstName;
+    ln = results[0].LastName;
+  }
+
+  var ret = { id:id, firstName:fn, lastName:ln, error:''};
+  res.status(200).json(ret);
+});
+
 app.post('/api/searchcards', async (req, res, next) =>
 {
   // incoming: userId, search
@@ -200,9 +238,17 @@ app.use((req, res, next) =>
   next();
 });
 
-const url = 'mongodb+srv://rickl:COP4331@cop4331.npxajj6.mongodb.net/test';
-const MongoClient = require("mongodb").MongoClient;
-const client = new MongoClient(url);
-client.connect(console.log("mongodb connected"));
+if (process.env.NODE_ENV === 'production') 
+{
+  // Set static folder
+  app.use(express.static('frontend/build'));
+  app.get('*', (req, res) => 
+  {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  });
+}
 
-app.listen(5000); // start Node + Express server on port 5000
+app.listen(PORT, () => 
+{
+  console.log('Server listening on port ' + PORT);
+});
