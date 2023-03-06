@@ -57,7 +57,7 @@ function CardUI()
             setMessage(e.toString());
         }
 
-};
+    };
 
     const searchCard = async event =>
     {

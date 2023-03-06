@@ -43,12 +43,35 @@ app.post('/api/addcard', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/register', async (req, res, next) =>
+{
+  //incoming : 
+  //outgoing: stores FirstName, LastName, mail, Login, Password
+
+  const {email, firstName, lastName, login, password, userId} = req.body;
+  const newUser = {mail:email, FirstName:firstName, LastName:lastName, UserID:userId, Login:login, Password:password };
+  var error = '' ;
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Users').insertOne(newUser);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
 app.post('/api/login', async (req, res, next) =>
 {
   // incoming: login, password
   // outgoing: id, firstName, lastName, error
 
- var error = '';
+  var error = '';
 
   const { login, password } = req.body;
 
@@ -68,26 +91,6 @@ app.post('/api/login', async (req, res, next) =>
 
   var ret = { id:id, firstName:fn, lastName:ln, error:''};
   res.status(200).json(ret);
-});
-
-app.post('/api/register',function(req,res){
-  // taking a user
-  const newuser=new User(req.body);
-  
- if(newuser.password!=newuser.password2)return res.status(400).json({message: "password not match"});
-  
-  User.findOne({email:newuser.email},function(err,user){
-      if(user) return res.status(400).json({ auth : false, message :"email exits"});
-
-      newuser.save((err,doc)=>{
-          if(err) {console.log(err);
-              return res.status(400).json({ success : false});}
-          res.status(200).json({
-              succes:true,
-              user : doc
-          });
-      });
-  });
 });
 
 app.post('/api/searchcards', async (req, res, next) =>
