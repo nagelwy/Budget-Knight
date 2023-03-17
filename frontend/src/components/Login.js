@@ -1,3 +1,5 @@
+
+import "./login.css";
 import React, { useState } from 'react';
 
 function Login()
@@ -57,20 +59,51 @@ function Login()
       }    
   };
 
-  return(
-    <div id="loginDiv">
-      <form onSubmit={doLogin}>
-      <span id="inner-title">PLEASE LOG IN</span><br />
-      <input type="text" id="loginName" placeholder="Username"
-  ref={(c) => loginName = c} /><br />
-<input type="password" id="loginPassword" placeholder="Password"
-  ref={(c) => loginPassword = c} /><br />
-      <input type="submit" id="loginButton" class="buttons" value = "Do It"
-        onClick={doLogin} />
-      </form>
-      <span id="loginResult">{message}</span>
-    </div>
-  );
+    return(
+        <div className="login-div">
+
+            <div className="leftside">
+
+
+            </div>
+
+
+            <div className="rightside">
+
+              <h1 className="login-header">
+                Welcome Back, <br /> Money Bags
+              </h1>
+
+               <form onSubmit={doLogin}>
+
+                <span className="login-sub">Username</span> 
+                <input className="form-control" type="text" id="loginName"ref={(c) => loginName = c} />
+                <br />
+                
+
+                <span className="login-sub">Password</span>
+                <input className="form-control"type="password" id="loginPassword"ref={(c) => loginPassword = c} />
+                <br />
+
+                <div className="btn-div">
+                <input type="submit" id="loginButton" className="button" value = "Enter"
+                  onClick={doLogin} />
+                </div>
+              
+              </form>
+              <span id="loginResult">{message}</span> 
+
+              <div className="reg-link">
+                <a href="RegisterPage.js" id="register-redirect">New to Budget Knight? <b>Create an account</b></a>
+              </div>
+
+            </div>
+
+
+
+        </div>
+    );
 };
 
 export default Login;
+
