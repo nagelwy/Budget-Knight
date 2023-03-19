@@ -6,10 +6,8 @@ import { Link } from 'react-router-dom';
 function Login()
 {
 
-  // let loginName;
-  const [login,loginName] = useState('');
-  // let loginPassword;
-  const [password,loginPassword] = useState('');
+  let loginName;
+  let loginPassword;
 
   const [message,setMessage] = useState('');
 
@@ -80,16 +78,17 @@ function Login()
                <form onSubmit={doLogin}>
 
                 <span className="login-sub">Username</span> 
-                <input value={login} onChange={e => loginName(e.target.value)} className="form-control" type="text" id="loginName" />
+                <input className="form-control" type="text" id="loginName"ref={(c) => loginName = c} />
                 <br />
                 
 
                 <span className="login-sub">Password</span>
-                <input value={password} onChange={e => loginPassword(e.target.value)} className="form-control"type="password" id="loginPassword"/>
+                <input className="form-control"type="password" id="loginPassword"ref={(c) => loginPassword = c} />
                 <br />
 
                 <div className="btn-div">
-                <input type="submit" id="loginButton" className="button" value = "Enter" onClick={doLogin} />
+                <input type="submit" id="loginButton" className="button" value = "Enter"
+                  onClick={doLogin} />
                 </div>
               
               </form>
