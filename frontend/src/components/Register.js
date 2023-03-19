@@ -89,7 +89,7 @@ function Register()
 
                 </div>
 
-                <input className="form-control" type="text" id="loginName" placeholder="Email address" ref={(c) => newEmail = c}/>
+                <input className="form-control" type="text" id="newEmail" placeholder="Email address" ref={(c) => newEmail = c}/>
                 <br />
 
                 <input className="form-control" type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c}/>
