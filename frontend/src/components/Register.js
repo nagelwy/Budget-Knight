@@ -6,7 +6,6 @@ function Register()
 
     const [message,setMessage] = useState('');
 
-
     const app_name = 'budgetknight'
     function buildPath(route)
     {
@@ -81,6 +80,7 @@ function Register()
                 <div className="name-div">
                     <div className="fn-div">
                         <input className="name-control" type="text" id="newFirstName" placeholder="First Name" ref={(c) => newFirstName = c}/>
+                        <input className="name-control" type="text" id="newUserId" placeholder="userid" ref={(c) => newUserID = c}/>
                     </div>
 
                     <div className="ln-div">
@@ -103,6 +103,8 @@ function Register()
                     <input type="submit" id="loginButton" className="button" value = "Enter"
                     onClick={doRegister} />
                 </div>
+
+                
               
               </form>
             <span id="loginResult">{message}</span> 
