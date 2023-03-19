@@ -1,6 +1,7 @@
 
 import "./login.css";
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Login()
 {
@@ -94,7 +95,7 @@ function Login()
               <span id="loginResult">{message}</span> 
 
               <div className="reg-link">
-                <a href="RegisterPage.js" id="register-redirect">New to Budget Knight? <b>Create an account</b></a>
+                <p id="register-redirect">New to Budget Knight?<Link to="/register"><b> Create an account</b></Link></p>
               </div>
 
             </div>

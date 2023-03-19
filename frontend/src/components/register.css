@@ -1,0 +1,124 @@
+body 
+{
+    background-color: #BAA796;
+    font-family: 'Otomanopee One';font-size: 22px;
+    height: 100%;
+    padding: 0;
+}
+
+.login-div {
+    display: flex;
+    height: 100%;
+    margin: 0;
+}
+
+@media screen and(min-width:768px){
+
+    .leftside, .rightside{
+        height: 100vh;
+    }
+
+}
+
+.leftside, .rightside{
+    height: 100vh;
+    width: 100%;
+}
+
+
+
+.leftside {
+    background-color: snow; /* Change to desired color */
+}
+
+.rightside {
+     
+    background-color: #AEDD97; /* Change to desired color */
+}
+
+form {
+    align-items: center;
+    width: 250px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px;
+}
+
+.form-control {
+    color: black;
+    font-size: 20px;
+    text-align: left;
+    border-radius: 6px;
+    height: 20px;
+    width: 300px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.btn-div {
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button {
+    background-color: #AEDD97;
+    height: 40px;
+    width: 150px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: opacity 0.35, color 0.35s;
+    box-shadow: 5px 5px 10px black(0, 0, 0, .15);
+    transition: box-shadow 0.15s;
+    transition: background-color 0.15s;
+    text-align: center;
+    border: none;
+}
+
+.button:hover {
+    filter: brightness(110%);
+}
+
+.login-header{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 50px;
+    text-align: center;
+    padding-top: 80px;
+}
+
+.login-sub{
+    font-family: 'Inter';
+    font-style: normal;
+    padding-inline-end: 197px;
+}
+
+.name-control{
+    color: black;
+    font-size: 20px;
+    text-align: left;
+    border-radius: 6px;
+    height: 20px;
+    width: 140px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.name-div{
+    display: inline-flex;
+}
+
+.fn-div{
+    padding-right: 10px;
+}
+
+#inner-title{
+    font-family: 'Inter';
+    font-style: normal;
+    font-size: 20px;
+    text-align: center;
+    padding-bottom: 10px;
+}

@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import "./register.css";
 
 function Register()
 {
+
+    const [message,setMessage] = useState('');
+
+
     const app_name = 'budgetknight'
     function buildPath(route)
     {
@@ -60,21 +65,66 @@ function Register()
     };
 
     return(
-        <div id="cardUIDiv">
-            <br />
-            <input type="text" id="searchText" placeholder="Card To Search For"
-          ref={(c) => search = c} />
-            <button type="button" id="addUserButton" class="buttons"
-          onClick={doRegister}> Register</button><br />
-        <span id="cardSearchResult">{searchResults}</span>
-        <p id="cardList">{cardList}</p><br /><br />
-        <input type="text" id="cardText" placeholder="Card To Add"
-          ref={(c) => card = c} />
-            <button type="button" id="addCardButton" class="buttons"
-                onClick={addCard}> Add Card </button><br />
-            <span id="cardAddResult">{message}</span>
+        <div className="login-div">
+
+            <div className="leftside">
+
+            <h1 className="login-header">
+                Welcome to the <br /> Finacial Fiasco
+              </h1>
+
+               <form onSubmit={doRegister}>
+
+                <span id="inner-title"> Create your Account:</span>
+                <br />
+
+                <div className="name-div">
+                    <div className="fn-div">
+                        <input className="name-control" type="text" id="newFirstName" placeholder="First Name" ref={(c) => newFirstName = c}/>
+                    </div>
+
+                    <div className="ln-div">
+                        <input className="name-control" type="text" id="newLastName" placeholder="Last Name"ref={(c) => newLastName = c}/>
+                    </div>
+
+                </div>
+
+                <input className="form-control" type="text" id="loginName" placeholder="Email address" ref={(c) => newEmail = c}/>
+                <br />
+
+                <input className="form-control" type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c}/>
+                <br />
+
+
+                <input className="form-control"type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c}/>
+                <br />
+
+                <div className="btn-div">
+                    <input type="submit" id="loginButton" className="button" value = "Enter"
+                    onClick={doRegister} />
+                </div>
+              
+              </form>
+            <span id="loginResult">{message}</span> 
+
+            <div className="reg-link">
+                <a href="RegisterPage.js" id="register-redirect">Already a member? <b>Log in</b></a>
+              </div>
+        
+            </div>
+
+
+            <div className="rightside">
+
+
+            
+
+            </div>
+
+
+
         </div>
-    )
-}
+    );
+};
 
 export default Register;
