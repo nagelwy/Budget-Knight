@@ -48,8 +48,8 @@ app.post('/api/register', async (req, res, next) =>
   //incoming : 
   //outgoing: stores FirstName, LastName, mail, Login, Password
 
-  const {email, firstName, lastName, login, password, userId} = req.body;
-  const newUser = {mail:email, FirstName:firstName, LastName:lastName, UserID:userId, Login:login, Password:password };
+  const {email, firstName, lastName, login, password} = req.body;
+  const newUser = {mail:email, FirstName:firstName, LastName:lastName, Login:login, Password:password };
   var error = '' ;
 
   try

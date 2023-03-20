@@ -35,7 +35,7 @@ function Register()
             mail:newEmail.value,
             firstName:newFirstName.value,
             lastName:newLastName.value,
-            UserID:newUserID.value,
+            // UserID:newUserID.value,
             login:loginName.value,
             password:loginPassword.value
         };
@@ -81,7 +81,7 @@ function Register()
                 <div className="name-div">
                     <div className="fn-div">
                         <input className="name-control" type="text" id="newFirstName" placeholder="First Name" ref={(c) => newFirstName = c}/>
-                        <input className="name-control" type="number" id="newUserId" placeholder="userid" ref={(c) => newUserID = c}/>
+                        {/* <input className="name-control" type="number" id="newUserId" placeholder="userid" ref={(c) => newUserID = c}/> */}
                     </div>
 
                     <div className="ln-div">
