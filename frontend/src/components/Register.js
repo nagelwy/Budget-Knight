@@ -35,7 +35,6 @@ function Register()
             mail:newEmail.value,
             firstName:newFirstName.value,
             lastName:newLastName.value,
-            // UserID:newUserID.value,
             login:loginName.value,
             password:loginPassword.value
         };
@@ -67,7 +66,7 @@ function Register()
     return(
         <div className="login-div">
 
-            <div className="leftside">
+            <div className="leftside-register">
 
             <h1 className="login-header">
                 Welcome to the <br /> Finacial Fiasco
@@ -81,7 +80,6 @@ function Register()
                 <div className="name-div">
                     <div className="fn-div">
                         <input className="name-control" type="text" id="newFirstName" placeholder="First Name" ref={(c) => newFirstName = c}/>
-                        {/* <input className="name-control" type="number" id="newUserId" placeholder="userid" ref={(c) => newUserID = c}/> */}
                     </div>
 
                     <div className="ln-div">
@@ -111,13 +109,13 @@ function Register()
             <span id="loginResult">{message}</span> 
 
             <div className="reg-link">
-                <p id="register-redirect">Already a member?<Link to="https://budgetknight.herokuapp.com/"><b> Log in</b></Link></p>
+                <p id="register-redirect">Already a member?<Link to="/login"><b> Log in</b></Link></p>
             </div>
         
             </div>
 
 
-            <div className="rightside">
+            <div className="rightside-register">
 
 
             

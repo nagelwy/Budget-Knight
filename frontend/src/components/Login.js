@@ -63,13 +63,13 @@ function Login()
     return(
         <div className="login-div">
 
-            <div className="leftside">
+            <div className="leftside-login">
 
 
             </div>
 
 
-            <div className="rightside">
+            <div className="rightside-login">
 
               <h1 className="login-header">
                 Welcome Back, <br /> Money Bags
