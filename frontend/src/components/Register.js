@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import "./register.css";
-import { Link } from 'react-router-dom';
 
 function Register()
 {
@@ -67,7 +66,7 @@ function Register()
     return(
         <div className="login-div">
 
-            <div className="leftsideR">
+            <div className="leftside">
 
             <h1 className="login-header">
                 Welcome to the <br /> Finacial Fiasco
@@ -81,6 +80,7 @@ function Register()
                 <div className="name-div">
                     <div className="fn-div">
                         <input className="name-control" type="text" id="newFirstName" placeholder="First Name" ref={(c) => newFirstName = c}/>
+                        <input className="name-control" type="number" id="newUserId" placeholder="userid" ref={(c) => newUserID = c}/>
                     </div>
 
                     <div className="ln-div">
@@ -88,8 +88,6 @@ function Register()
                     </div>
 
                 </div>
-
-                <input className="name-control" type="number" id="newUserId" placeholder="userid" ref={(c) => newUserID = c}/>
 
                 <input className="form-control" type="text" id="newEmail" placeholder="Email address" ref={(c) => newEmail = c}/>
                 <br />
@@ -113,12 +111,12 @@ function Register()
 
             <div className="reg-link">
                 <p id="register-redirect">Already a member?<Link to="https://budgetknight.herokuapp.com/"><b> Log in</b></Link></p>
-              </div>
+            </div>
         
             </div>
 
 
-            <div className="rightsideR">
+            <div className="rightside">
 
 
             
