@@ -110,7 +110,7 @@ function Register()
             <span id="loginResult">{message}</span> 
 
             <div className="reg-link">
-                <a href="RegisterPage.js" id="register-redirect">Already a member? <b>Log in</b></a>
+                <p id="register-redirect">Already a member?<Link to="https://budgetknight.herokuapp.com/"><b> Log in</b></Link></p>
               </div>
         
             </div>
