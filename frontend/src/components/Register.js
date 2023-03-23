@@ -25,7 +25,6 @@ function Register()
     let newEmail;
     let newFirstName;
     let newLastName;
-    let newUserID;
 
     const doRegister = async event =>
     {

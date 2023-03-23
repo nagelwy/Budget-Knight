@@ -66,6 +66,29 @@ app.post('/api/register', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/creategoal', async (req, res, next) =>
+{
+  //incoming : 
+  //outgoing: stores metGoal, desiredSaving
+
+  const {goal, savingsdesired} = req.body;
+  const newGoal = {metGoal : goal, desiredSavings: savingsdesired };
+  var error = '' ;
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Goals').insertOne(newGoal);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
 app.post('/api/login', async (req, res, next) =>
 {
   // incoming: login, password
@@ -90,30 +113,6 @@ app.post('/api/login', async (req, res, next) =>
   }
 
   var ret = { id:id, firstName:fn, lastName:ln, error:''};
-  res.status(200).json(ret);
-});
-
-app.post('/api/searchcards', async (req, res, next) =>
-{
-  // incoming: userId, search
-  // outgoing: results[], error
-
-  var error = '';
-
-  const { userId, search } = req.body;
-
-  var _search = search.trim();
- 
-  const db = client.db("COP4331");
-  const results = await db.collection('Cards').find({"Card":{$regex:_search+'.*', $options:'r'}}).toArray();
- 
-  var _ret = [];
-  for( var i=0; i<results.length; i++ )
-  {
-    _ret.push( results[i].Card );
-  }
- 
-  var ret = {results:_ret, error:error};
   res.status(200).json(ret);
 });
 
