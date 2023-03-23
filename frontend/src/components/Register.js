@@ -31,11 +31,11 @@ function Register()
         event.preventDefault();
 
         var obj = {
-            mail:newEmail.value,
             firstName:newFirstName.value,
             lastName:newLastName.value,
             login:loginName.value,
-            password:loginPassword.value
+            password:loginPassword.value,
+            email:newEmail.value
         };
         var js = JSON.stringify(obj);
 

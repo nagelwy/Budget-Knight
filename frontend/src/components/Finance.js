@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./goals.css";
+import "./finance.css";
 import { Link } from 'react-router-dom';
 import { Double } from 'mongodb';
 
@@ -21,25 +21,27 @@ function Goals()
         }
     }
 
-    let goalBool;
-    let savingsDesired;
+    let income;
+    let savings;
+    let bills;
 
-    const createGoal = async event =>
+    const createfinance = async event =>
     {
         event.preventDefault();
 
         var obj = {
-            metGoal: goalBool.value,
-            desiredSavings: savingsDesired.value
+            monthlyIncome: income.value = 0,
+            monthylSavings: savings.value,
+            monthlyBills: monthlyIncome.value - monthylSavings.value
         };
         var js = JSON.stringify(obj);
 
         try
         {
-            const response = await fetch(buildPath('api/creategoal'),
+            const response = await fetch(buildPath('api/createfinance'),
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-            let txt = await response.text();
+            let txt = await response.Double();
             let res = JSON.parse(txt);
 
             if(res.error.length > 0)
@@ -48,7 +50,7 @@ function Goals()
             }
             else
             {
-                setMessage("Goal has been added!");
+                setMessage("Finance has been added!");
             }
         }   
         catch(e)
@@ -60,4 +62,4 @@ function Goals()
     return;
 };
 
-export default Goals;
+export default Finance;

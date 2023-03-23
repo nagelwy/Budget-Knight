@@ -46,16 +46,39 @@ app.post('/api/addcard', async (req, res, next) =>
 app.post('/api/register', async (req, res, next) =>
 {
   //incoming : 
-  //outgoing: stores FirstName, LastName, mail, Login, Password
+  //outgoing: stores FirstName, LastName, Mail, Login, Password
 
-  const {email, firstName, lastName, login, password} = req.body;
-  const newUser = {mail:email, FirstName:firstName, LastName:lastName, Login:login, Password:password };
+  const {firstName, lastName, login, password, email} = req.body;
+  const newUser = {FirstName:firstName, LastName:lastName, Login:login, Password:password, Mail:email};
   var error = '' ;
 
   try
   {
     const db = client.db("COP4331");
     const result = db.collection('Users').insertOne(newUser);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
+app.post('/api/createfinance', async (req, res, next) =>
+{
+  //incoming : 
+  //outgoing: stores monthlyIncome, monthlySaving, monthlyBills
+
+  const {incomeMonthly, savingsMonthly, billsMonthly} = req.body;
+  const newFinance = {monthlyIncome: incomeMonthly, monthlySaving: savingsMonthly, monthlyBills: billsMonthly};
+  var error = '' ;
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Finances').insertOne(newFinance);
   }
   catch(e)
   {
