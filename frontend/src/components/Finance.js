@@ -30,9 +30,9 @@ function Goals()
         event.preventDefault();
 
         var obj = {
-            monthlyIncome: income.value = 0,
+            monthlyIncome: income.value,
             monthylSavings: savings.value,
-            monthlyBills: monthlyIncome.value - monthylSavings.value
+            monthlyBills: Double
         };
         var js = JSON.stringify(obj);
 

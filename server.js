@@ -49,6 +49,12 @@ app.post('/api/register', async (req, res, next) =>
   //outgoing: stores FirstName, LastName, Mail, Login, Password
 
   const {firstName, lastName, login, password, email} = req.body;
+
+  if (!firstName || !lastName || !login || !password || !email)
+  {
+    return res.status(500).json({ error: "Please fill in all the details" });
+  }
+
   const newUser = {FirstName:firstName, LastName:lastName, Login:login, Password:password, Mail:email};
   var error = '' ;
 
@@ -72,7 +78,7 @@ app.post('/api/createfinance', async (req, res, next) =>
   //outgoing: stores monthlyIncome, monthlySaving, monthlyBills
 
   const {incomeMonthly, savingsMonthly, billsMonthly} = req.body;
-  const newFinance = {monthlyIncome: incomeMonthly, monthlySaving: savingsMonthly, monthlyBills: billsMonthly};
+  const newFinance = {monthlyIncome: incomeMonthly, monthlySaving: savingsMonthly, monthlyBills: incomeMonthly - savingsMonthly};
   var error = '' ;
 
   try
@@ -167,3 +173,5 @@ app.listen(PORT, () =>
 {
   console.log('Server listening on port ' + PORT);
 });
+
+module.exports = express.Router();

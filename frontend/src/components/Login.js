@@ -78,7 +78,7 @@ function Login()
                <form onSubmit={doLogin}>
 
                 <span className="login-sub">Username</span> 
-                <input className="form-control" type="text" id="loginName"ref={(c) => loginName = c} />
+                <input className="form-control" type="text" id="loginEmail"ref={(c) => loginEmail = c} />
                 <br />
                 
 
