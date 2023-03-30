@@ -119,23 +119,23 @@ app.post('/api/login', async (req, res, next) =>
 
   var error = '';
 
-  const { login, password } = req.body;
+  const { email, password } = req.body;
 
   const db = client.db("COP4331");
-  const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
+  const results = await db.collection('Users').find({Mail:email,Password:password}).toArray();
 
-  var id = -1;
+  var mail = '';
   var fn = '';
   var ln = '';
 
   if( results.length > 0 )
   {
-    id = results[0].UserID;
+    mail = results[0].Mail;
     fn = results[0].FirstName;
     ln = results[0].LastName;
   }
 
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
+  var ret = { email:mail, firstName:fn, lastName:ln, error:''};
   res.status(200).json(ret);
 });
 

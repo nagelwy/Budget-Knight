@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 function Login()
 {
 
-  let loginName;
+  let loginEmail;
   let loginPassword;
 
   const [message,setMessage] = useState('');
@@ -30,7 +30,7 @@ function Login()
   {
       event.preventDefault();
 
-      var obj = {login:loginName.value,password:loginPassword.value};
+      var obj = {email:loginEmail.value,password:loginPassword.value};
       var js = JSON.stringify(obj);
 
       try
@@ -42,7 +42,7 @@ function Login()
 
           if( res.id <= 0 )
           {
-              setMessage('User/Password combination incorrect');
+              setMessage('Email/Password combination incorrect');
           }
           else
           {
