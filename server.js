@@ -61,6 +61,15 @@ app.post('/api/register', async (req, res, next) =>
   try
   {
     const db = client.db("COP4331");
+
+    const userExists = await db.collection('Users').findOne({Mail: email});
+    if (userExists)
+    {
+      return res
+          .status(422)
+          .json({ error: "Email already exists" });
+    }
+
     const result = db.collection('Users').insertOne(newUser);
   }
   catch(e)

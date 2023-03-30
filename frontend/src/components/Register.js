@@ -49,7 +49,7 @@ function Register()
 
             if(res.error.length > 0)
             {
-                setMessage("API Error: " + res.error);
+                setMessage(res.error);
             }
             else
             {
