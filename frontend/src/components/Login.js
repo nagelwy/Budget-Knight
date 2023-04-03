@@ -30,7 +30,7 @@ function Login()
   {
       event.preventDefault();
 
-      var obj = {email:loginEmail.value,password:loginPassword.value};
+      var obj = {email:loginEmail.value, password:loginPassword.value};
       var js = JSON.stringify(obj);
 
       try
@@ -40,13 +40,13 @@ function Login()
 
           var res = JSON.parse(await response.text());
 
-          if( res.id <= 0 )
+          if( !res.email )
           {
               setMessage('Email/Password combination incorrect');
           }
           else
           {
-              var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+              var user = {firstName:res.firstName,lastName:res.lastName}
               localStorage.setItem('user_data', JSON.stringify(user));
 
               setMessage('');
@@ -77,7 +77,7 @@ function Login()
 
                <form onSubmit={doLogin}>
 
-                <span className="login-sub">Username</span> 
+                <span className="login-sub">Email</span> 
                 <input className="form-control" type="text" id="loginEmail"ref={(c) => loginEmail = c} />
                 <br />
                 

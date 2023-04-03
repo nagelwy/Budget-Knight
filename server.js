@@ -48,14 +48,14 @@ app.post('/api/register', async (req, res, next) =>
   //incoming : 
   //outgoing: stores FirstName, LastName, Mail, Login, Password
 
-  const {firstName, lastName, login, password, email} = req.body;
+  const {firstName, lastName, password, email} = req.body;
 
-  if (!firstName || !lastName || !login || !password || !email)
+  if (!firstName || !lastName || !password || !email)
   {
     return res.status(500).json({ error: "Please fill in all the details" });
   }
 
-  const newUser = {FirstName:firstName, LastName:lastName, Login:login, Password:password, Mail:email};
+  const newUser = {FirstName:firstName, LastName:lastName, Password:password, Mail:email};
   var error = '' ;
 
   try
