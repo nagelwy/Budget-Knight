@@ -22,15 +22,19 @@ function Goals()
     }
 
     let goalBool;
-    let savingsDesired;
+    let savingsdesired;
+    let currentAmount;
+    let email;
 
     const createGoal = async event =>
     {
         event.preventDefault();
 
         var obj = {
-            metGoal: goalBool.value,
-            desiredSavings: savingsDesired.value
+            goal: goalBool.value,
+            desiredSavings: savingsdesired.value,
+            currAmount: currentAmount.value, 
+            Mail: email.value
         };
         var js = JSON.stringify(obj);
 

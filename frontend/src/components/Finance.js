@@ -24,6 +24,7 @@ function Goals()
     let income;
     let savings;
     let bills;
+    let email;
 
     const createfinance = async event =>
     {
@@ -32,7 +33,8 @@ function Goals()
         var obj = {
             monthlyIncome: income.value,
             monthylSavings: savings.value,
-            monthlyBills: Double
+            monthlyBills: Double,
+            Mail: email.value
         };
         var js = JSON.stringify(obj);
 

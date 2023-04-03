@@ -83,11 +83,11 @@ app.post('/api/register', async (req, res, next) =>
 
 app.post('/api/createfinance', async (req, res, next) =>
 {
-  //incoming : 
+  //incoming : email
   //outgoing: stores monthlyIncome, monthlySaving, monthlyBills
 
-  const {incomeMonthly, savingsMonthly, billsMonthly} = req.body;
-  const newFinance = {monthlyIncome: incomeMonthly, monthlySaving: savingsMonthly, monthlyBills: incomeMonthly - savingsMonthly};
+  const {incomeMonthly, savingsMonthly, email} = req.body;
+  const newFinance = {monthlyIncome: incomeMonthly, monthlySaving: savingsMonthly, monthlyBills: incomeMonthly - savingsMonthly, Mail:email};
   var error = '' ;
 
   try
@@ -109,14 +109,36 @@ app.post('/api/creategoal', async (req, res, next) =>
   //incoming : 
   //outgoing: stores metGoal, desiredSaving
 
-  const {goal, savingsdesired} = req.body;
-  const newGoal = {metGoal : goal, desiredSavings: savingsdesired };
+  const {savingsdesired, currentAmount, email} = req.body;
+  const newGoal = {metGoal : savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount, Mail:email };
   var error = '' ;
 
   try
   {
     const db = client.db("COP4331");
     const result = db.collection('Goals').insertOne(newGoal);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
+app.post('/api/updategoal', async (req, res, next) =>
+{
+  const {savingsdesired, currentAmount, email} = req.body;
+  const updateGoal = {metGoal : savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount};
+  var error = '' ;
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Goals');
+
+    result.findOneAndUpdate({Mail: email}, {$set: {metGoal: savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount}});
   }
   catch(e)
   {
