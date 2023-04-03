@@ -131,18 +131,19 @@ app.post('/api/creategoal', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.post('/api/updategoal', async (req, res, next) =>
+app.put('/api/updategoal', async (req, res, next) =>
 {
   const {_id, savingsdesired, currentAmount} = req.body;
 
   const filter = { _id: new ObjectID(_id)};
+  const update = { $set: {metGoal: savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount}};
 
   var error = '';
 
   try
   {
     const db = client.db("COP4331");
-    const result = db.collection('Goals').updateOne(filter, { $set: {desiredSavings: 123456}});
+    const result = db.collection('Goals').updateOne(filter, update);
   }
   catch(e)
   {
