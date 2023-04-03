@@ -20,7 +20,6 @@ function Register()
         }
     }
 
-    let loginName;
     let loginPassword;
     let newEmail;
     let newFirstName;
@@ -33,7 +32,6 @@ function Register()
         var obj = {
             firstName:newFirstName.value,
             lastName:newLastName.value,
-            login:loginName.value,
             password:loginPassword.value,
             email:newEmail.value
         };

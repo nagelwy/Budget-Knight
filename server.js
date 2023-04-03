@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const path = require('path');           
+const { Double } = require('mongodb');
 const PORT = process.env.PORT || 5000;
 
 const app = express();
@@ -13,7 +14,10 @@ app.use(bodyParser.json());
 
 require('dotenv').config();
 const url = process.env.MONGODB_URI;
+
 const MongoClient = require('mongodb').MongoClient; 
+const ObjectID = require('mongodb').ObjectId;
+
 const client = new MongoClient(url);
 client.connect();
 
@@ -129,16 +133,34 @@ app.post('/api/creategoal', async (req, res, next) =>
 
 app.post('/api/updategoal', async (req, res, next) =>
 {
-  const {savingsdesired, currentAmount, email} = req.body;
-  const updateGoal = {metGoal : savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount};
+  const {_id, savingsdesired, currentAmount} = req.body;
+
+  const filter = { _id: new ObjectID(_id)};
+
+  var error = '';
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Goals').updateOne(filter, { $set: {desiredSavings: 123456}});
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
+app.post('/api/deletegoal', async (req, res, next) =>
+{
   var error = '' ;
 
   try
   {
     const db = client.db("COP4331");
-    const result = db.collection('Goals');
-
-    result.findOneAndUpdate({Mail: email}, {$set: {metGoal: savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount}});
+    const result = db.collection('Goals').findOneAndDelete({Mail: req.body.email});
   }
   catch(e)
   {
