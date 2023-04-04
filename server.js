@@ -108,6 +108,28 @@ app.post('/api/createfinance', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.put('/api/updatefinance', async (req, res, next) =>
+{
+  const {_id, incomeMonthly, savingsMonthly, } = req.body;
+
+  const filter = { _id: new ObjectID(_id)};
+  const update = { $set: {monthlyIncome: incomeMonthly, monthlySaving: savingsMonthly, monthlyBills: incomeMonthly - savingsMonthly}};
+  var error = '';
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Finances').updateOne(filter, update);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
 app.post('/api/creategoal', async (req, res, next) =>
 {
   //incoming : 

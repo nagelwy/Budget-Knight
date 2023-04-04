@@ -21,6 +21,7 @@ function Goals()
         }
     }
 
+    let objID;
     let income;
     let savings;
     let bills;
@@ -60,6 +61,44 @@ function Goals()
             setMessage(e.toString());
         }
     };
+
+    const updateFinance = async event =>
+    {
+        event.preventDefault();
+
+        var obj = {
+            _id: objID.value,
+            monthlyIncome: incomeMonthly.value,
+            monthlySaving: savingsMonthly.value,
+            monthlyBills: incomeMonthly.value - savingsMonthly.value,
+            Mail: email.value
+
+
+        };
+        var js = JSON.stringify(obj);
+
+        try
+        {
+            const response = await fetch(buildPath('api/updatefinance'),
+            {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+
+            let txt = await response.text();
+            let res = JSON.parse(txt);
+
+            if(res.error.length > 0)
+            {
+                setMessage("API Error: " + res.error);
+            }
+            else
+            {
+                setMessage("Finance has been Updated!");
+            }
+        }
+        catch(e)
+        {
+            setMessage(e.toString());
+        }
+    }
 
     return;
 };
