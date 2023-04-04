@@ -1,34 +1,123 @@
 import React, { useState } from 'react';
 import "./transactions.css";
+import { Link } from 'react-router-dom';
+import { Double, ObjectId } from 'mongodb';
 
-function Transactions() {
-    const [showForm, setShowForm] = useState(false);
-    const [transactions, setTransactions] = useState([]);
-    const [formData, setFormData] = useState({
+function Transactions() 
+{
+  const [message,setMessage] = useState('');
+
+  const app_name = 'budgetknight'
+  function buildPath(route)
+  {
+    if (process.env.NODE_ENV === 'production') 
+    {
+      return 'https://' + app_name +  '.herokuapp.com/' + route;
+    }
+    else
+    {        
+      return 'http://localhost:5000/' + route;
+    }
+  }
+
+  let objID;
+  let name;
+  let amount;
+  let email;
+
+  const addTransaction = async event =>
+  {
+    event.preventDefault();
+
+    var obj = {
+      Mail: email.value,
+      transName: name.value,
+      transAmount: amount.value
+    };
+    var js = JSON.stringify(obj);
+
+    try
+    {
+      const response = await fetch(buildPath('api/addtransaction'),
+      {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      let txt = await response.text();
+      let res = JSON.parse(txt);
+
+      if(res.error.length > 0)
+      {
+        setMessage("API Error: " + res.error);
+      }
+      else
+      {
+      setMessage("Transaction has been added!");
+      }
+    }   
+    catch(e)
+    {
+      setMessage(e.toString());
+    }
+  };
+
+  const deleteTransaction = async event =>
+  {
+    event.preventDefault();
+
+    var obj = {
+      _id: objID.value
+    };
+    var js = JSON.stringify(obj);
+
+    try
+    {
+      const response = await fetch(buildPath('api/deletetransaction'),
+      {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+
+      let txt = await response.text();
+      let res = JSON.parse(txt);
+
+      if(res.error.length > 0)
+      {
+        setMessage("API Error: " + res.error);
+      }
+      else
+      {
+        setMessage("Transaction has been deleted!");
+      }
+    }   
+    catch(e)
+    {
+      setMessage(e.toString());
+    }
+  }
+
+  const [showForm, setShowForm] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    amount: '',
+    category: '',
+    date: ''
+  });
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+  
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setTransactions((prevTransactions) => [...prevTransactions, formData]);
+    setFormData({
       name: '',
       amount: '',
       category: '',
       date: ''
     });
+    setShowForm(false);
+  };
   
-    const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
-  
-    const handleFormSubmit = (e) => {
-      e.preventDefault();
-      setTransactions((prevTransactions) => [...prevTransactions, formData]);
-      setFormData({
-        name: '',
-        amount: '',
-        category: '',
-        date: ''
-      });
-      setShowForm(false);
-    };
-  
-    return (
+  return (
     <div className="transaction-container">
       <div>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous"></link>

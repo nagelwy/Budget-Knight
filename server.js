@@ -85,6 +85,47 @@ app.post('/api/register', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/addtransaction', async (req, res, next) =>
+{
+  const {email, name, amount} = req.body;
+  const newTransaction = {Mail: email, transName: name, transAmount: amount};
+  var error = '' ;
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Transactions').insertOne(newTransaction);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
+app.put('/api/deletetransaction', async (req, res, next) =>
+{
+  const {_id} = req.body;
+  const filter = { _id: new ObjectID(_id)};
+
+  var error = '';
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Transactions').deleteOne(filter);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
 app.post('/api/createfinance', async (req, res, next) =>
 {
   //incoming : email

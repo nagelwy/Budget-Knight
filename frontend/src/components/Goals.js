@@ -42,7 +42,7 @@ function Goals()
         try
         {
             const response = await fetch(buildPath('api/creategoal'),
-            {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+            {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             let txt = await response.text();
             let res = JSON.parse(txt);
