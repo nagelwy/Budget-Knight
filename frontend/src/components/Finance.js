@@ -100,6 +100,38 @@ function Goals()
         }
     }
 
+    const deleteFinance = async event =>
+    {
+        event.preventDefault();
+
+        var obj = {
+            _id: objID.value
+        };
+        var js = JSON.stringify(obj);
+
+        try
+        {
+            const response = await fetch(buildPath('api/deletegoal'),
+            {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+
+            let txt = await response.text();
+            let res = JSON.parse(txt);
+
+            if(res.error.length > 0)
+            {
+                setMessage("API Error: " + res.error);
+            }
+            else
+            {
+                setMessage("Finance has been deleted!");
+            }
+        }   
+        catch(e)
+        {
+            setMessage(e.toString());
+        }
+    }
+
     return;
 };
 

@@ -88,7 +88,7 @@ function Goals()
             }
             else
             {
-                setMessage("Goal has been added!");
+                setMessage("Goal has been updated!");
             }
         }   
         catch(e)
@@ -97,19 +97,19 @@ function Goals()
         }
     }
 
-    const deletegoal = async event =>
+    const deleteGoal = async event =>
     {
         event.preventDefault();
 
         var obj = {
-            Mail: email.value
+            _id: objID.value
         };
         var js = JSON.stringify(obj);
 
         try
         {
             const response = await fetch(buildPath('api/deletegoal'),
-            {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
 
             let txt = await response.text();
             let res = JSON.parse(txt);

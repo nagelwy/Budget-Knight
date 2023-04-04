@@ -130,6 +130,27 @@ app.put('/api/updatefinance', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.put('/api/deletefinance', async (req, res, next) =>
+{
+  const {_id} = req.body;
+  const filter = { _id: new ObjectID(_id)};
+
+  var error = '';
+
+  try
+  {
+    const db = client.db("COP4331");
+    const result = db.collection('Finances').deleteOne(filter);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  var ret = {error:error};
+  res.status(200).json(ret);
+});
+
 app.post('/api/creategoal', async (req, res, next) =>
 {
   //incoming : 
@@ -176,14 +197,17 @@ app.put('/api/updategoal', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.post('/api/deletegoal', async (req, res, next) =>
+app.put('/api/deletegoal', async (req, res, next) =>
 {
-  var error = '' ;
+  const {_id} = req.body;
+  const filter = { _id: new ObjectID(_id)};
+
+  var error = '';
 
   try
   {
     const db = client.db("COP4331");
-    const result = db.collection('Goals').findOneAndDelete({Mail: req.body.email});
+    const result = db.collection('Goals').deleteOne(filter);
   }
   catch(e)
   {
