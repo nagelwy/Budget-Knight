@@ -88,10 +88,6 @@ function Register()
                 <input className="form-control" type="text" id="newEmail" placeholder="Email address" ref={(c) => newEmail = c}/>
                 <br />
 
-                <input className="form-control" type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c}/>
-                <br />
-
-
                 <input className="form-control"type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c}/>
                 <br />
 

@@ -1,15 +1,19 @@
 
 import "./login.css";
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { EmailContext } from './EmailContext';
+import { useContext } from 'react';
 
-function Login()
+const Login = () => 
 {
 
   let loginEmail;
   let loginPassword;
 
   const [message,setMessage] = useState('');
+  const { email, setEmail } = useContext(EmailContext);
 
   //
 
@@ -26,11 +30,12 @@ function Login()
     }
   }
 
-  const doLogin = async event =>
+  const DoLogin = async (event, email) =>
   {
       event.preventDefault();
 
       var obj = {email:loginEmail.value, password:loginPassword.value};
+      // console.log(loginEmail.value);
       var js = JSON.stringify(obj);
 
       try
@@ -46,8 +51,9 @@ function Login()
           }
           else
           {
-              var user = {firstName:res.firstName,lastName:res.lastName}
+              var user = {firstName:res.firstName,lastName:res.lastName,email:res.email}
               localStorage.setItem('user_data', JSON.stringify(user));
+
 
               setMessage('');
               window.location.href = '/main';
@@ -75,7 +81,7 @@ function Login()
                 Welcome Back, <br /> Money Bags
               </h1>
 
-               <form onSubmit={doLogin}>
+               <form onSubmit={DoLogin}>
 
                 <span className="login-sub">Email</span> 
                 <input className="form-control" type="text" id="loginEmail"ref={(c) => loginEmail = c} />
@@ -88,7 +94,7 @@ function Login()
 
                 <div className="btn-div">
                 <input type="submit" id="loginButton" className="button" value = "Enter"
-                  onClick={doLogin} />
+                  onClick={DoLogin} />
                 </div>
               
               </form>

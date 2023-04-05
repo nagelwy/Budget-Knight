@@ -30,6 +30,9 @@ body{
   .top-row {
     height: 50%;
     border-radius: 25px;
+    margin-left: 30px;
+    margin-bottom: 20px;
+    margin-right: 30px;
   }
   
   .bottom-row {

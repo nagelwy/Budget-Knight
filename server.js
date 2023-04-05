@@ -286,6 +286,37 @@ app.post('/api/login', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+// JOSH PLAYGROUND
+app.get('/api/checkgoal', async (req, res) =>
+{
+  var error = '';
+
+  const { email } = req.query;
+
+  const db = client.db("COP4331");
+  const result = await db.collection('Goals').findOne({ Mail: email });
+
+  res.json(result != null);
+});
+
+app.get('/api/loadgoal', async (req, res) =>
+{
+  var error = '';
+
+  const { email } = req.query;
+
+  const db = client.db("COP4331");
+  const result = await db.collection('Goals').findOne({ Mail: email });
+
+  let currAmount = result ? result.currAmount : null;
+  let desiredSavings = result ? result.desiredSavings : null;
+
+  var ret = { currAmount: currAmount, desiredSavings: desiredSavings, error:''};
+  res.status(200).json(ret);
+
+});
+
+
 app.use((req, res, next) =>
 {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -316,3 +347,5 @@ app.listen(PORT, () =>
 });
 
 module.exports = express.Router();
+
+
