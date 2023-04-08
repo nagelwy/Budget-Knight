@@ -197,8 +197,8 @@ app.post('/api/creategoal', async (req, res, next) =>
   //incoming : 
   //outgoing: stores metGoal, desiredSaving
 
-  const {savingsdesired, currentAmount, email} = req.body;
-  const newGoal = {metGoal : savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount, Mail:email };
+  const {savingsdesired, currentAmount, email, nameOfGoal} = req.body;
+  const newGoal = {metGoal : savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount, Mail:email, Name: nameOfGoal };
   var error = '' ;
 
   try
@@ -217,10 +217,10 @@ app.post('/api/creategoal', async (req, res, next) =>
 
 app.put('/api/updategoal', async (req, res, next) =>
 {
-  const {_id, savingsdesired, currentAmount} = req.body;
+  const {_id, savingsdesired, currentAmount, nameOfGoal} = req.body;
 
   const filter = { _id: new ObjectID(_id)};
-  const update = { $set: {metGoal: savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount}};
+  const update = { $set: {metGoal: savingsdesired <= currentAmount, desiredSavings: savingsdesired, currAmount: currentAmount, Name: nameOfGoal}};
 
   var error = '';
 
@@ -285,6 +285,39 @@ app.post('/api/login', async (req, res, next) =>
   var ret = { email:mail, firstName:fn, lastName:ln, error:''};
   res.status(200).json(ret);
 });
+
+// JOSH PLAYGROUND
+app.get('/api/checkgoal', async (req, res) =>
+{
+  var error = '';
+
+  const { email } = req.query;
+
+  const db = client.db("COP4331");
+  const result = await db.collection('Goals').findOne({ Mail: email });
+
+  res.json(result != null);
+});
+
+app.get('/api/loadgoal', async (req, res) =>
+{
+  var error = '';
+
+  const { email } = req.query;
+
+  const db = client.db("COP4331");
+  const result = await db.collection('Goals').findOne({ Mail: email });
+
+  let currAmount = result ? result.currAmount : null;
+  let desiredSavings = result ? result.desiredSavings : null;
+  let nameOfGoal = result ? result.Name : null;
+  let idOfGoal = result ? result._id : null;
+
+  var ret = { currAmount: currAmount, desiredSavings: desiredSavings, Name: nameOfGoal, _id: idOfGoal, error:''};
+  res.status(200).json(ret);
+
+});
+
 
 app.use((req, res, next) =>
 {

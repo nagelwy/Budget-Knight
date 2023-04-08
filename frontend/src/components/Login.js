@@ -1,4 +1,3 @@
-
 import "./login.css";
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -6,12 +5,13 @@ import { Link } from 'react-router-dom';
 function Login()
 {
 
+  console.log("here");
+
   let loginEmail;
   let loginPassword;
 
   const [message,setMessage] = useState('');
-
-  //
+  const { email, setEmail } = useContext(EmailContext);
 
   const app_name = 'budgetknight'
   function buildPath(route)
@@ -31,6 +31,7 @@ function Login()
       event.preventDefault();
 
       var obj = {email:loginEmail.value, password:loginPassword.value};
+
       var js = JSON.stringify(obj);
 
       try
@@ -55,7 +56,7 @@ function Login()
       }
       catch(e)
       {
-          alert(e.toString());
+          console.log(e.toString());
           return;
       }    
   };
@@ -88,7 +89,7 @@ function Login()
 
                 <div className="btn-div">
                 <input type="submit" id="loginButton" className="button" value = "Enter"
-                  onClick={doLogin} />
+                onClick={DoLogin} />
                 </div>
               
               </form>
@@ -107,4 +108,3 @@ function Login()
 };
 
 export default Login;
-

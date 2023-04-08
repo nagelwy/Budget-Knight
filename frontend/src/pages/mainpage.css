@@ -1,5 +1,5 @@
 body{
-    background-color: snow;
+  background-color: snow;
 }
 
 .container {
@@ -30,6 +30,9 @@ body{
   .top-row {
     height: 50%;
     border-radius: 25px;
+    margin-left: 70px;
+    margin-bottom: 40px;
+    margin-right: 30px;
   }
   
   .bottom-row {
