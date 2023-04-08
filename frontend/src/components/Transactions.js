@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "./transactions.css";
 import { Link } from 'react-router-dom';
-import { Double, ObjectId } from 'mongodb';
+// import { Double, ObjectId } from 'mongodb';
 
 function Transactions() 
 {
@@ -120,7 +120,7 @@ function Transactions()
   return (
     <div className="transaction-container">
       <div>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous"></link>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossOrigin="anonymous"></link>
         <div className="head-div">
             <div className="head-div-span">
                 <span className="head-name">Transactions:</span>
