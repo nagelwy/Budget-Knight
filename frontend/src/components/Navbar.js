@@ -21,7 +21,7 @@ function NavBar() {
     }
   return (
     <header>
-        <h3 ClassName="logo"> Logo</h3>
+        <h3 className="logo"> Logo</h3>
         <nav ref={navRef}>
             <a href="/#">Home</a>
             <a href="/#">Mission</a>
