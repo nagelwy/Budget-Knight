@@ -8,7 +8,7 @@
 }
 
 :root{
-    --mainColor: #333;
+    --mainColor: #333 !important;
     --mainColorLight: #43d181;
     --secondaryColor: #ca1616;
     --textColor: #ffffff;
@@ -18,7 +18,7 @@ header {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     height: 80px;
     padding: 0 2rem;
     background-color: var(--mainColor);

@@ -23,10 +23,10 @@ function NavBar() {
     <header>
         <h3 className="logo"> Logo</h3>
         <nav ref={navRef}>
-            <a href="/#">Home</a>
-            <a href="/#">Mission</a>
-            <a href="/#">Services</a>
-            <a href="/#">Contact Us</a>
+            <a href="#home">Home</a>
+            <a href="#misson">Mission</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact Us</a>
                 <button className = "login-btn" onClick={goToLogIn}> 
                 Log in
                 </button>

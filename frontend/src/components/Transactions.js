@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import "./transactions.css";
 import { Link } from 'react-router-dom';
 // import { Double, ObjectId } from 'mongodb';
+import { useEffect } from 'react';
 
 function Transactions() 
 {
+  // Stores, firstName, lastName, email -> to access eg. userData.firstName
+  var userData = JSON.parse(localStorage.getItem('user_data'));
+
+  useEffect(() => {
+    loadTransactions();
+  }, []);
+
   const [message,setMessage] = useState('');
 
   const app_name = 'budgetknight'
@@ -29,10 +37,15 @@ function Transactions()
   {
     event.preventDefault();
 
+    const emailFE = userData.email;
+    const nameFE = event.target.transactionName.value;
+    const amountFE = event.target.transactionAmount.value;
+    const parsedAmount = parseFloat(amountFE, 10);
+
     var obj = {
-      Mail: email.value,
-      transName: name.value,
-      transAmount: amount.value
+      email: emailFE,
+      name: nameFE,
+      amount: parsedAmount
     };
     var js = JSON.stringify(obj);
 
@@ -51,6 +64,7 @@ function Transactions()
       else
       {
       setMessage("Transaction has been added!");
+      window.location.reload();
       }
     }   
     catch(e)
@@ -91,18 +105,51 @@ function Transactions()
     }
   }
 
+  const loadTransactions = async event =>
+  {
+
+    // const userData = JSON.parse(localStorage.getItem('user_data'));
+    const email = userData.email;
+  
+    try {
+      const response = await fetch(`/api/loadtransactions?email=${email}`);
+      console.log('response:', response);
+
+      const data = await response.json();
+      console.log('data:', data);
+  
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        setTransactions(data.transactions);
+      }
+    } catch (error) {
+      console.error('Error loading transactions:', error);
+    }
+  }
+
   const [showForm, setShowForm] = useState(false);
   const [transactions, setTransactions] = useState([]);
-  const [formData, setFormData] = useState({
-    name: '',
-    amount: '',
-    category: '',
-    date: ''
-  });
+  // const [formData, setFormData] = useState({
+  //   name: '',
+  //   amount: '',
+  //   category: '',
+  //   date: ''
+  // });
   
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevData) => ({ ...prevData, [name]: value }));
+  // };
+
+  const [formData, setFormData] = useState({ name: '', amount: '' });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
   
   const handleFormSubmit = (e) => {
@@ -116,6 +163,8 @@ function Transactions()
     });
     setShowForm(false);
   };
+
+  
   
   return (
     <div className="transaction-container">
@@ -131,34 +180,35 @@ function Transactions()
         </div>
         {showForm && (
           
-            <form className={`transaction-form  ${showForm ? 'show-form' : ''}`} onSubmit={handleFormSubmit}>
+            <form className={`transaction-form  ${showForm ? 'show-form' : ''}`} onSubmit={addTransaction}>
                 <label htmlFor="name">Name:</label>
                 <input
                 type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
+                id="transactionName"
+                name="transactionName"
+                // value={formData.name}
+                // onChange={handleInputChange}
                 required
                 />
                 <label htmlFor="amount">Amount:</label>
                 <input
                 type="number"
-                id="amount"
-                name="amount"
-                value={formData.amount}
-                onChange={handleInputChange}
+                id="transactionAmount"
+                name="transactionAmount"
+                step="0.01"
+                // value={formData.amount}
+                // onChange={handleInputChange}
                 required
                 />
-                <label htmlFor="category">Category:</label>
-                <select
+                {/* <label htmlFor="category">Category:</label> */}
+                {/* <select
                 id="category"
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
                 required
-                >
-                <option value="">Select Category</option>
+                > */}
+                {/* <option value="">Select Category</option>
                 <option value="Groceries">Groceries</option>
                 <option value="Eating Out">Eating Out</option>
                 <option value="Rent/Utilities">Rent/Utilities</option>
@@ -173,7 +223,7 @@ function Transactions()
                 value={formData.date}
                 onChange={handleInputChange}
                 required
-                />
+                /> */}
                 <button type="submit">Add</button>
             </form>
         
@@ -185,17 +235,17 @@ function Transactions()
               <tr>
                 <th>Name</th>
                 <th>Amount</th>
-                <th>Category</th>
-                <th>Date</th>
+                {/* <th>Category</th> */}
+                {/* <th>Date</th> */}
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction, index) => (
-                <tr key={index}>
-                  <td>{transaction.name}</td>
-                  <td>{transaction.amount}</td>
-                  <td>{transaction.category}</td>
-                  <td>{transaction.date}</td>
+              {transactions.map((transaction) => (
+                <tr key={transaction._id}>
+                  <td>{transaction.transName}</td>
+                  <td>{transaction.transAmount}</td>
+                  {/* <td>{transaction.category}</td> */}
+                  {/* <td>{transaction.date}</td> */}
                 </tr>
               ))}
             </tbody>

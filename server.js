@@ -105,6 +105,21 @@ app.post('/api/addtransaction', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.get('/api/loadtransactions', async (req, res) => {
+  const { email } = req.query;
+  let transactions = [];
+  let error = '';
+
+  try {
+    const db = client.db('COP4331');
+    transactions = await db.collection('Transactions').find({ Mail: email }).toArray();
+  } catch (e) {
+    error = e.toString();
+  }
+
+  res.status(200).json({ transactions, error });
+});
+
 app.put('/api/deletetransaction', async (req, res, next) =>
 {
   const {_id} = req.body;

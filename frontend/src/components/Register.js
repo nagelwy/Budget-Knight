@@ -66,13 +66,12 @@ function Register()
             <div className="leftside-register">
 
             <h1 className="login-header">
-                Welcome to the <br /> Finacial Fiasco
+                Welcome to Budget Knight, <br /> your financial ally!
               </h1>
 
                <form onSubmit={doRegister}>
 
                 <span id="inner-title"> Create your Account:</span>
-                <br />
 
                 <div className="name-div">
                     <div className="fn-div">
@@ -84,9 +83,10 @@ function Register()
                     </div>
 
                 </div>
+                <br />
 
                 <input className="form-control" type="text" id="newEmail" placeholder="Email address" ref={(c) => newEmail = c}/>
-                <br />
+                
 
 
                 <input className="form-control"type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c}/>
@@ -103,7 +103,9 @@ function Register()
             <span id="loginResult">{message}</span> 
 
             <div className="reg-link">
-                <p id="register-redirect">Already a member?<Link to="/login"><b> Log in</b></Link></p>
+                <p id="login-redirect">Already a member? </p> 
+                <br />
+                <Link to="/login"><b>Log in</b></Link>
             </div>
         
             </div>
