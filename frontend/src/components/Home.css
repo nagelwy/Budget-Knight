@@ -1,5 +1,12 @@
 body {
-    background-color: #eee;
+    background-color: azure;
+}
+
+:root{
+    --mainColor: #AEDD97;
+    --mainColorLight: #43d181;
+    --secondaryColor: #ca1616;
+    --textColor: #ffffff;
 }
 
 .welcome {
@@ -25,10 +32,41 @@ body {
     padding: 5px;
     cursor: pointer;
     color: #000 !important;
-    background: #04c253 !important;
+    background: var(--mainColor) !important;
     border: none;
     border-radius: 5px;
     outline: none;
     font-size: 1rem;
     justify-content: right;
+}
+
+.home,
+.mission,
+.services,
+.contact,
+.rest {
+    min-height: 100vh;
+    text-align: center;
+    margin-top: 80px;
+}
+
+.home {
+    background-color: azure;
+}
+
+.mission {
+    background-color: var(--mainColor);
+    color: azure;
+}
+
+.services {
+    background-color: azure;
+}
+
+.contact {
+    background-color: var(--mainColor);
+}
+
+html {
+    scroll-behavior: smooth;
 }
