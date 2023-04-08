@@ -1,11 +1,37 @@
 import React, { useState } from 'react';
 import "./goals.css";
 import { Link } from 'react-router-dom';
-import { Double, ObjectId } from 'mongodb';
-
+import { useEffect } from 'react';
+import {useRef} from 'react'
+// import { Double, ObjectId} from 'mongodb';
 function Goals()
 {
+    // Stores, firstName, lastName, email -> to access eg. userData.firstName
+    var userData = JSON.parse(localStorage.getItem('user_data'));
 
+    // Stores, currAmount, desiredSavings, goalId -> to access eg. goalData.currAmount
+    var goalData = JSON.parse(localStorage.getItem('goal_data'));
+
+
+    // Used to check if the user already has a goal
+    // cpdateGoal: if(user has goal) hasGoal = 1
+    // if(user does not have a goal) hasGoal = 0
+    const [hasGoal, setHasGoal] = useState(false);
+    useEffect(() => {
+      checkGoal();
+    }, []);
+
+
+    // loadGoal: updates currAmount, desiredSavings, and goalId
+    // based on what is stores in the database
+    const [currAmount, setCurrAmount] = useState(0);
+    const [desiredSavings, setDesiredSavings] = useState(0);
+    const [goalId, setGoalId] = useState(null);
+    useEffect(() => {
+      loadGoal();
+    }, []);
+
+    // Used to deliver error/submission messages to the user
     const [message,setMessage] = useState('');
 
     const app_name = 'budgetknight'
@@ -26,16 +52,37 @@ function Goals()
     let savingsdesired;
     let currentAmount;
     let email;
+    let goalName;
+
+    // const goalName = useRef();
+
+    const [showForm, setShowForm] = useState(false);
+    const [editGoalName, setEditGoalName] = useState(0);
+    const [editAmount, setEditAmount] = useState(0);
+    const [savingsAmount, setSavingsAmount] = useState(0);
+    const [editGoal, setEditGoal] = useState(null);
+
 
     const createGoal = async event =>
     {
         event.preventDefault();
 
+        // If both fields are not filled out -> alert and return
+        if (!goalName.value || !savingsdesired.value) {
+          alert('Please enter goal name and amount');
+          return;
+      }
+
+      const parsedSavingsdesired = parseInt(savingsdesired.value, 10);
+      const parsedCurrentAmount = parseInt(currentAmount.value, 10);
+
+      const parsedEmail = userData.email;
+      
         var obj = {
-            goal: goalBool.value,
-            desiredSavings: savingsdesired.value,
-            currAmount: currentAmount.value, 
-            Mail: email.value
+            savingsdesired: parsedSavingsdesired,
+            currentAmount: parsedCurrentAmount, 
+            email: parsedEmail,
+            nameOfGoal: goalName.value
         };
         var js = JSON.stringify(obj);
 
@@ -53,7 +100,9 @@ function Goals()
             }
             else
             {
-                setMessage("Goal has been added!");
+                console.log("Goal has been added!");
+                window.location.reload();
+                loadGoal();
             }
         }   
         catch(e)
@@ -62,22 +111,86 @@ function Goals()
         }
     };
 
+
+    const checkGoal = async event =>
+    {
+        // event.preventDefault();
+
+        const parsedEmail = userData.email;
+
+        try
+        {
+            const response = await fetch(buildPath(`api/checkgoal?email=${parsedEmail}`),
+            {method:'GET',headers:{'Content-Type': 'application/json'}});
+
+            let res = await response.json();
+            setHasGoal(res)
+
+        }   
+        catch(e)
+        {
+            console.log(e.toString());
+        }
+    }
+
+    const loadGoal = async event =>
+    {
+        // event.preventDefault();
+
+        const parsedEmail = userData.email;
+
+        var obj = {
+          email: parsedEmail
+        };
+        var js = JSON.stringify(obj);
+
+        try
+        {
+            const response = await fetch(buildPath(`api/loadgoal?email=${parsedEmail}`),
+            {method:'GET',headers:{'Content-Type': 'application/json'}});
+
+            let res = await response.json();
+
+            if( !res ){
+                console.log("Not Found");
+            }
+            else{
+                var goal = {currAmount:res.currAmount, desiredSavings:res.desiredSavings, goalName: res.Name, goalId: res._id};
+                localStorage.setItem('goal_data', JSON.stringify(goal));
+                setCurrAmount(res.currAmount);
+                setDesiredSavings(res.desiredSavings);
+                setGoalId(goalData.goalId);
+            }    
+        }
+        catch(e)
+        {
+            console.log(e.toString());
+        }
+    }
+
+    let newGoalName;
+    let newSavingsDesired;
+    let newCurrentAmount;
+
     const updateGoal = async event =>
     {
         event.preventDefault();
 
+        const parsedSavingsdesired = parseInt(savingsdesired.value, 10);
+        const parsedCurrentAmount = parseInt(currentAmount.value, 10);
+
         var obj = {
-            _id: objID.value,
-            desiredSavings: savingsdesired.value,
-            currAmount: currentAmount.value, 
-            Mail: email.value
+            _id: goalData.goalId,
+            savingsdesired: parsedSavingsdesired,
+            currentAmount: parsedCurrentAmount, 
+            nameOfGoal: goalName.value
         };
         var js = JSON.stringify(obj);
 
         try
         {
             const response = await fetch(buildPath('api/updategoal'),
-            {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
 
             let txt = await response.text();
             let res = JSON.parse(txt);
@@ -89,6 +202,7 @@ function Goals()
             else
             {
                 setMessage("Goal has been updated!");
+                window.location.reload();
             }
         }   
         catch(e)
@@ -99,11 +213,12 @@ function Goals()
 
     const deleteGoal = async event =>
     {
-        event.preventDefault();
+        // event.preventDefault();
 
         var obj = {
-            _id: objID.value
+            _id: goalData.goalId
         };
+
         var js = JSON.stringify(obj);
 
         try
@@ -120,7 +235,8 @@ function Goals()
             }
             else
             {
-                setMessage("Goal has been deleted!");
+                console.log("Goal has been deleted!");
+                window.location.reload();
             }
         }   
         catch(e)
@@ -129,7 +245,92 @@ function Goals()
         }
     }
 
-    return;
+      const editGoalSubmit = (e) => {
+      e.preventDefault();
+      if (!goalName || !savingsdesired) {
+          alert('Please enter goal name and amount');
+          return;
+      }
+    }
+      // const editedGoal = { name: goalName, amount: goalAmount };
+      // const newGoals = [...goals];
+      // newGoals[editGoal] = editedGoal;
+      // setGoals(newGoals);
+      // setGoalName('');
+      // setGoalAmount(0);
+      // setEditGoal(null);
+  // };
+
+
+
+    return (
+
+      <div className="goals-container">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossOrigin="anonymous"></link>
+
+        {/* Contains header text and add button goal button */}
+        <div className="top-goal-div">
+            <span className="goal-header">Goal:</span>
+        </div>
+
+        {/* If there is no goal we show the div stating "no goal" */}
+        {hasGoal === false ? (
+          <div>
+            <div className="goal-add-btn">
+              <button className="fa fa-plus" onClick={() => setShowForm(prevShowForm => !prevShowForm)}></button> 
+            </div>
+          <div className="no-goal-container">
+            <p>No Goal</p>
+          </div>
+        </div>
+        )
+
+        // The user has a goal, display that goal's information
+         :(
+          <>
+            <div className="goal-container">
+                <div className="goal-info">
+                  <p>{goalData.goalName}</p>
+                  <br />
+                  <p>{`${currAmount}/${desiredSavings}`}</p>
+                </div>
+
+                  <div className="goal-buttons">
+                    <button onClick={() => { setEditGoalName(newGoalName); setEditAmount(newCurrentAmount); setSavingsAmount(newSavingsDesired); setShowForm(true); }}>Edit</button>
+                    <button onClick={() => {
+                      if (window.confirm("Are you sure you want to delete this goal?")) {
+                              setGoalId(goalData.goalId);
+                                deleteGoal();
+                          }
+                    }}>Delete</button>
+                  </div>
+
+              </div>
+          </>
+        )}
+        {showForm && (
+          <div className="goal-form-container">
+              <form className="add-goal-form" onSubmit={hasGoal == 1 ? updateGoal : createGoal}>
+
+                {/* User inputs' for entering a Goal */}
+                <label htmlFor="name">Goal Name:</label>
+                <input type="text" id="amount" name="amount" value={goalName} ref={(c) => goalName = c} />
+
+                <label htmlFor="amount">Goal Amount:</label>
+                <input type="number" id="amount" name="amount" value={savingsdesired} ref={(c) => savingsdesired = c} />
+                
+                {/* This is temperary */}
+                <label htmlFor="amount">currentAmount:</label>
+                <input type="number" id="amount" name="amount" value={currentAmount} ref={(c) => currentAmount = c} />
+
+                <button type="submit">{hasGoal == 1 ? 'Update' : 'Add'}</button>
+                <button type="button" onClick={() => { setShowForm(false); setEditGoal(null); }}>Cancel</button>
+              </form>
+          </div>
+        )}
+      </div>
+    );
 };
 
 export default Goals;
