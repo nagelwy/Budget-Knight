@@ -87,8 +87,8 @@ app.post('/api/register', async (req, res, next) =>
 
 app.post('/api/addtransaction', async (req, res, next) =>
 {
-  const {email, name, amount} = req.body;
-  const newTransaction = {Mail: email, transName: name, transAmount: amount};
+  const {email, name, amount, category, date} = req.body;
+  const newTransaction = {Mail: email, transName: name, transAmount: amount, transCat: category, transDate: date};
   var error = '' ;
 
   try

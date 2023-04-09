@@ -40,12 +40,17 @@ function Transactions()
     const emailFE = userData.email;
     const nameFE = event.target.transactionName.value;
     const amountFE = event.target.transactionAmount.value;
+    const categoryFE = event.target.transactionCategory.value;
+    const dateFE = event.target.transactionDate.value;
+
     const parsedAmount = parseFloat(amountFE, 10);
 
     var obj = {
       email: emailFE,
       name: nameFE,
-      amount: parsedAmount
+      amount: parsedAmount,
+      category: categoryFE,
+      date: dateFE
     };
     var js = JSON.stringify(obj);
 
@@ -200,15 +205,15 @@ function Transactions()
                 // onChange={handleInputChange}
                 required
                 />
-                {/* <label htmlFor="category">Category:</label> */}
-                {/* <select
-                id="category"
-                name="category"
+                <label htmlFor="category">Category:</label>
+                <select
+                id="transactionCategory"
+                name="transactionCategory"
                 value={formData.category}
                 onChange={handleInputChange}
                 required
-                > */}
-                {/* <option value="">Select Category</option>
+                >
+                <option value="">Select Category</option>
                 <option value="Groceries">Groceries</option>
                 <option value="Eating Out">Eating Out</option>
                 <option value="Rent/Utilities">Rent/Utilities</option>
@@ -218,12 +223,12 @@ function Transactions()
                 <label htmlFor="date">Date:</label>
                 <input
                 type="date"
-                id="date"
-                name="date"
-                value={formData.date}
-                onChange={handleInputChange}
+                id="transactionDate"
+                name="transactionDate"
+                // value={formData.date}
+                // onChange={handleInputChange}
                 required
-                /> */}
+                />
                 <button type="submit">Add</button>
             </form>
         
@@ -244,8 +249,8 @@ function Transactions()
                 <tr key={transaction._id}>
                   <td>{transaction.transName}</td>
                   <td>${transaction.transAmount}</td>
-                  {/* <td>{transaction.category}</td> */}
-                  {/* <td>{transaction.date}</td> */}
+                  <td>{transaction.transCat}</td>
+                  <td>{transaction.transDate}</td>
                 </tr>
               ))}
             </tbody>
