@@ -120,17 +120,17 @@ app.get('/api/loadtransactions', async (req, res) => {
   res.status(200).json({ transactions, error });
 });
 
-app.put('/api/deletetransaction', async (req, res, next) =>
+app.delete('/api/deletetransaction/:id', async (req, res, next) =>
 {
-  const {_id} = req.body;
-  const filter = { _id: new ObjectID(_id)};
+  const {id} = req.params;
+  const filter = { _id: new ObjectID(id)};
 
   var error = '';
 
   try
   {
     const db = client.db("COP4331");
-    const result = db.collection('Transactions').deleteOne(filter);
+    const result = await db.collection('Transactions').deleteOne(filter);
   }
   catch(e)
   {

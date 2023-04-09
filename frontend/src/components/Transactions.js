@@ -78,35 +78,33 @@ function Transactions()
     }
   };
 
-  const deleteTransaction = async event =>
+  const deleteTransaction = async (transactionId) =>
   {
-    event.preventDefault();
-
-    var obj = {
-      _id: objID.value
-    };
-    var js = JSON.stringify(obj);
+    // var obj = {
+    //   _id: objID.value
+    // };
+    // var js = JSON.stringify(obj);
 
     try
     {
-      const response = await fetch(buildPath('api/deletetransaction'),
-      {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+      const response = await fetch(buildPath(`api/deletetransaction/${transactionId}`),
+      {method:'DELETE',});
 
-      let txt = await response.text();
-      let res = JSON.parse(txt);
+      let res = await response.json();
 
       if(res.error.length > 0)
       {
-        setMessage("API Error: " + res.error);
+        console.log("API Error: " + res.error);
       }
       else
       {
-        setMessage("Transaction has been deleted!");
+        console.log("Transaction has been deleted!");
+        setTransactions(transactions.filter((transaction) => transaction._id !== transactionId));
       }
     }   
     catch(e)
     {
-      setMessage(e.toString());
+      console.log(e.toString());
     }
   }
 
@@ -209,8 +207,8 @@ function Transactions()
                 <select
                 id="transactionCategory"
                 name="transactionCategory"
-                value={formData.category}
-                onChange={handleInputChange}
+                // value={formData.category}
+                // onChange={handleInputChange}
                 required
                 >
                 <option value="">Select Category</option>
@@ -242,6 +240,7 @@ function Transactions()
                 <th>Amount</th>
                 <th>Category</th>
                 <th>Date</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -251,6 +250,7 @@ function Transactions()
                   <td>${transaction.transAmount}</td>
                   <td>{transaction.transCat}</td>
                   <td>{transaction.transDate}</td>
+                  <td><button onClick={() => deleteTransaction(transaction._id)}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
