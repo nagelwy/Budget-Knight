@@ -24,7 +24,7 @@ function NavBarHome() {
         <h3 className="logo"> Logo</h3>
         <nav ref={navRef}>
             <a href="#home">Home</a>
-            <a href="#misson">Mission</a>
+            <a href="#mission">Mission</a>
             <a href="#services">Services</a>
             <a href="#contact">Contact Us</a>
                 <button className = "login-btn" onClick={goToLogIn}> 

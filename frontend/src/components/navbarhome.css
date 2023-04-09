@@ -8,13 +8,15 @@
 }
 
 :root{
-    --mainColor: #333 !important;
+    --mainColor: #AEDD97 !important;
     --mainColorLight: #43d181;
     --secondaryColor: #ca1616;
     --textColor: #ffffff;
 }
 
 header {
+    position: sticky;
+    top: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -33,12 +35,6 @@ nav a{
 
 nav a:hover{
     color: var(--secondaryColor);
-}
-
-header .logo {
-    position: fixed !important;
-    left: 5px;
-    top: 0;
 }
 
 header .login-btn {
@@ -76,32 +72,11 @@ header .nav-btn {
     font-size: 1.8rem;
 }
 
-header .logsignup-btn {
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    align-self: center;
-    justify-content: flex-end;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--textColor);
-    visibility: hidden;
-    opacity: 0;
-    font-size: 1.8rem;
-}
-
 @media only screen and (max-width: 1024px) {
     header .nav-btn {
        visibility: visible;
        opacity: 1; 
     }
-
-    header .logsignup-btn{
-        visibility: visible;
-        opacity: 1;
-     }
 
     header nav {
         position: fixed;

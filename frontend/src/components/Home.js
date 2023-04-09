@@ -21,11 +21,9 @@ function Home () {
         <div>
             <section className = "home" id = "home"> 
             <h1 className="welcome">Welcome Knights, <br /> Let's take your first step towards <br /> Financial Freedom </h1>
-            <div className = "idk">
             <button className = "home-signup-btn" onClick={goToSignUp}> 
                 Get Started
                 </button>
-            </div>
             </section>
             <section className = "mission" id = "mission"> 
             <h1>Mission Statement</h1>
