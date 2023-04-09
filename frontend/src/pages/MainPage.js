@@ -1,4 +1,5 @@
 import React from 'react';
+// import { useState } from 'react';
 
 import Transactions from '../components/Transactions';
 import NavBar from '../components/NavBarMain';
@@ -8,7 +9,7 @@ import './mainpage.css'
 
 const MainPage = () =>
 {
-
+  // const [currentBalance, setCurrentBalance] = useState(0);
     return (
         <div>
           <NavBar />

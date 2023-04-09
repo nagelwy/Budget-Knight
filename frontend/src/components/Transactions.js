@@ -68,8 +68,13 @@ function Transactions()
       }
       else
       {
-      setMessage("Transaction has been added!");
-      window.location.reload();
+        setMessage("Transaction has been added!");
+        const newBalance = parseFloat(userData.currentBalance) - parsedAmount;
+    
+        // Update the current balance in localStorage
+        userData.currentBalance = newBalance;
+        localStorage.setItem('user_data', JSON.stringify(userData));  
+        window.location.reload();
       }
     }   
     catch(e)
@@ -80,11 +85,6 @@ function Transactions()
 
   const deleteTransaction = async (transactionId) =>
   {
-    // var obj = {
-    //   _id: objID.value
-    // };
-    // var js = JSON.stringify(obj);
-
     try
     {
       const response = await fetch(buildPath(`api/deletetransaction/${transactionId}`),
@@ -133,12 +133,6 @@ function Transactions()
 
   const [showForm, setShowForm] = useState(false);
   const [transactions, setTransactions] = useState([]);
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   amount: '',
-  //   category: '',
-  //   date: ''
-  // });
   
   // const handleInputChange = (e) => {
   //   const { name, value } = e.target;
@@ -250,7 +244,7 @@ function Transactions()
                   <td>${transaction.transAmount}</td>
                   <td>{transaction.transCat}</td>
                   <td>{transaction.transDate}</td>
-                  <td><button onClick={() => deleteTransaction(transaction._id)}>Delete</button></td>
+                  <td className="del-btn-div"><button className="del-btn" onClick={() => {if (window.confirm("Are you sure you want to delete this transaction?")) {deleteTransaction(transaction._id);}}}>Delete</button></td>
                 </tr>
               ))}
             </tbody>

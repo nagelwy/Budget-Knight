@@ -21,32 +21,6 @@ const ObjectID = require('mongodb').ObjectId;
 const client = new MongoClient(url);
 client.connect();
 
-app.post('/api/addcard', async (req, res, next) =>
-{
-  // incoming: userId, color
-  // outgoing: error
-
-  const { userId, card } = req.body;
-
-  const newCard = {Card:card,UserId:userId};
-  var error = '';
-
-  try
-  {
-    const db = client.db("COP4331");
-    const result = db.collection('Cards').insertOne(newCard);
-  }
-  catch(e)
-  {
-    error = e.toString();
-  }
-
-  cardList.push( card );
-
-  var ret = { error: error };
-  res.status(200).json(ret);
-});
-
 app.post('/api/register', async (req, res, next) =>
 {
   //incoming : 
@@ -59,7 +33,7 @@ app.post('/api/register', async (req, res, next) =>
     return res.status(500).json({ error: "Please fill in all the details" });
   }
 
-  const newUser = {FirstName:firstName, LastName:lastName, Password:password, Mail:email};
+  const newUser = {FirstName:firstName, LastName:lastName, Password:password, Mail:email, currentBalance: 0};
   var error = '' ;
 
   try
@@ -95,6 +69,20 @@ app.post('/api/addtransaction', async (req, res, next) =>
   {
     const db = client.db("COP4331");
     const result = db.collection('Transactions').insertOne(newTransaction);
+
+      // Update the user's currentBalance
+      const updateResult = await db.collection('Users').findOneAndUpdate(
+        { Mail: email },
+        { $inc: { currentBalance: -parseFloat(amount) } },
+        { returnDocument: 'after' }
+      );
+
+    // Check if the update was successful
+    if (!updateResult || !updateResult.value) {
+      throw new Error('Failed to update user balance');
+    }
+
+
   }
   catch(e)
   {
@@ -289,15 +277,17 @@ app.post('/api/login', async (req, res, next) =>
   var mail = '';
   var fn = '';
   var ln = '';
+  var cb = 0;
 
   if( results.length > 0 )
   {
     mail = results[0].Mail;
     fn = results[0].FirstName;
     ln = results[0].LastName;
+    cb = results[0].currentBalance
   }
 
-  var ret = { email:mail, firstName:fn, lastName:ln, error:''};
+  var ret = { email:mail, firstName:fn, lastName:ln, currentBalance: cb, error:''};
   res.status(200).json(ret);
 });
 

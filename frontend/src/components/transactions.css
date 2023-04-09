@@ -149,3 +149,15 @@ table {
   .transaction-container{
     position: relative;
   }
+
+  .del-btn{
+    background-color: #333 !important;
+  }
+
+  .del-btn-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    padding-top: 0;
+  }

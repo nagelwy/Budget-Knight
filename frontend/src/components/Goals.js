@@ -210,8 +210,6 @@ function Goals()
 
     const deleteGoal = async event =>
     {
-        // event.preventDefault();
-
         var obj = {
             _id: goalData.goalId
         };
