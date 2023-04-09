@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Transactions from '../components/Transactions';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/NavBarMain';
 import Goals from '../components/Goals';
 import SpendGraph from '../components/SpendGraph'
 import './mainpage.css'

@@ -114,7 +114,6 @@ function Goals()
 
     const checkGoal = async event =>
     {
-        // event.preventDefault();
 
         const parsedEmail = userData.email;
 
@@ -135,8 +134,6 @@ function Goals()
 
     const loadGoal = async event =>
     {
-        // event.preventDefault();
-
         const parsedEmail = userData.email;
 
         var obj = {
@@ -270,9 +267,9 @@ function Goals()
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossOrigin="anonymous"></link>
 
         {/* Contains header text and add button goal button */}
-        <div className="top-goal-div">
-            <span className="goal-header">Goal:</span>
-        </div>
+        {/* <div className="top-goal-div"> */}
+            {/* <span className="goal-header">Goal:</span> */}
+        {/* </div> */}
 
         {/* If there is no goal we show the div stating "no goal" */}
         {hasGoal === false ? (
@@ -290,11 +287,19 @@ function Goals()
          :(
           <>
             <div className="goal-container">
-                <div className="goal-info">
-                  <p>{goalData.goalName}</p>
-                  <br />
-                  <p>{`${currAmount}/${desiredSavings}`}</p>
-                </div>
+
+              <div className="goal-header">
+                <h3>{goalData.goalName}</h3>
+              </div>
+
+              <div className="goal-progress-container">
+                <div className="goal-progress-bar" style={{ width: `${(currAmount / desiredSavings) * 100}%` }}></div>
+              </div>
+
+              <div className="goal-amounts">
+                <p className="current-amount">{`$${currAmount}`}</p>
+                <p className="desired-amount">{`$${desiredSavings}`}</p>
+             </div>
 
                   <div className="goal-buttons">
                     <button onClick={() => { setEditGoalName(newGoalName); setEditAmount(newCurrentAmount); setSavingsAmount(newSavingsDesired); setShowForm(true); }}>Edit</button>

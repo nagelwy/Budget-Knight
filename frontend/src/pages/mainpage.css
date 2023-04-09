@@ -28,6 +28,9 @@ body{
   }
   
   .top-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     height: 50%;
     border-radius: 25px;
     margin-left: 70px;

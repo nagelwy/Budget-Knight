@@ -1,9 +1,9 @@
 import { React, useRef } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
-import "./navbar.css";
+import "./navbarhome.css";
 
-function NavBar() {
+function NavBarHome() {
 
     const navRef = useRef();
 
@@ -52,4 +52,4 @@ function NavBar() {
   )
 }
 
-export default NavBar
+export default NavBarHome;

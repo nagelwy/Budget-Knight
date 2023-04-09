@@ -235,15 +235,15 @@ function Transactions()
               <tr>
                 <th>Name</th>
                 <th>Amount</th>
-                {/* <th>Category</th> */}
-                {/* <th>Date</th> */}
+                <th>Category</th>
+                <th>Date</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((transaction) => (
                 <tr key={transaction._id}>
                   <td>{transaction.transName}</td>
-                  <td>{transaction.transAmount}</td>
+                  <td>${transaction.transAmount}</td>
                   {/* <td>{transaction.category}</td> */}
                   {/* <td>{transaction.date}</td> */}
                 </tr>
