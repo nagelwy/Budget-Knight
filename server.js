@@ -59,37 +59,49 @@ app.post('/api/register', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.post('/api/addtransaction', async (req, res, next) =>
-{
-  const {email, name, amount, category, date} = req.body;
-  const newTransaction = {Mail: email, transName: name, transAmount: amount, transCat: category, transDate: date};
-  var error = '' ;
+app.post('/api/addtransaction', async (req, res, next) => {
+  const { email, name, amount, category, date } = req.body;
+  const newTransaction = { Mail: email, transName: name, transAmount: amount, transCat: category, transDate: date };
+  var error = '';
 
-  try
-  {
+  try {
     const db = client.db("COP4331");
     const result = db.collection('Transactions').insertOne(newTransaction);
 
-      // Update the user's currentBalance
-      const updateResult = await db.collection('Users').findOneAndUpdate(
-        { Mail: email },
-        { $inc: { currentBalance: -parseFloat(amount) } },
-        { returnDocument: 'after' }
-      );
+    // Determine whether to add or subtract the transaction amount from the user's currentBalance
+    const balanceChange = category === "Income" ? parseFloat(amount) : -parseFloat(amount);
+
+    // Update the user's currentBalance
+    const updateResult = await db.collection('Users').findOneAndUpdate(
+      { Mail: email },
+      { $inc: { currentBalance: balanceChange } },
+      { returnDocument: 'after' }
+    );
 
     // Check if the update was successful
     if (!updateResult || !updateResult.value) {
       throw new Error('Failed to update user balance');
     }
 
+    // If the category is "Goal", update the currAmount in the Goals collection
+    if (category === "Goal") {
+      const goalUpdateResult = await db.collection('Goals').findOneAndUpdate(
+        { Mail: email },
+        { $inc: { currAmount: parseFloat(amount) } },
+        { returnDocument: 'after' }
+      );
 
-  }
-  catch(e)
-  {
+      // Check if the goal update was successful
+      if (!goalUpdateResult || !goalUpdateResult.value) {
+        throw new Error('Failed to update goal amount');
+      }
+    }
+
+  } catch (e) {
     error = e.toString();
   }
 
-  var ret = {error:error};
+  var ret = { error: error };
   res.status(200).json(ret);
 });
 
@@ -108,24 +120,46 @@ app.get('/api/loadtransactions', async (req, res) => {
   res.status(200).json({ transactions, error });
 });
 
-app.delete('/api/deletetransaction/:id', async (req, res, next) =>
-{
-  const {id} = req.params;
-  const filter = { _id: new ObjectID(id)};
+app.delete('/api/deletetransaction/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const filter = { _id: new ObjectID(id) };
 
   var error = '';
 
-  try
-  {
+  try {
     const db = client.db("COP4331");
-    const result = await db.collection('Transactions').deleteOne(filter);
-  }
-  catch(e)
-  {
+    const transactionToDelete = await db.collection('Transactions').findOne(filter);
+
+    if (transactionToDelete) {
+      const userFilter = { Mail: transactionToDelete.Mail };
+      const amount = parseFloat(transactionToDelete.transAmount);
+
+      // Determine whether to add or subtract the transaction amount from the user's currentBalance
+      const balanceChange = transactionToDelete.transCat === "Income" ? -amount : amount;
+
+      const update = {
+        $inc: { currentBalance: balanceChange },
+      };
+
+      // Update the user's currentBalance
+      await db.collection('Users').updateOne(userFilter, update);
+
+      // If the transaction category is "Goal", subtract the transaction amount from the currAmount in the Goals collection
+      if (transactionToDelete.transCat === "Goal") {
+        await db.collection('Goals').updateOne(
+          { Mail: transactionToDelete.Mail },
+          { $inc: { currAmount: -amount } }
+        );
+      }
+
+      // Delete the transaction
+      await db.collection('Transactions').deleteOne(filter);
+    }
+  } catch (e) {
     error = e.toString();
   }
 
-  var ret = {error:error};
+  var ret = { error: error };
   res.status(200).json(ret);
 });
 

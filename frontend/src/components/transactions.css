@@ -161,3 +161,12 @@ table {
     margin-top: 0;
     padding-top: 0;
   }
+
+  .income{
+    color: green;
+  }
+
+  .trans-btn-div{
+    display: flex;
+    flex-direction: column;
+  }
