@@ -21,41 +21,53 @@ const ObjectID = require('mongodb').ObjectId;
 const client = new MongoClient(url);
 client.connect();
 
-app.post('/api/register', async (req, res, next) =>
-{
-  //incoming : 
+app.post('/api/register', async (req, res, next) => {
+  //incoming :
   //outgoing: stores FirstName, LastName, Mail, Login, Password
 
-  const {firstName, lastName, password, email} = req.body;
+  const { firstName, lastName, password, email } = req.body;
 
-  if (!firstName || !lastName || !password || !email)
-  {
+  if (!firstName || !lastName || !password || !email) {
     return res.status(500).json({ error: "Please fill in all the details" });
   }
 
-  const newUser = {FirstName:firstName, LastName:lastName, Password:password, Mail:email, currentBalance: 0};
-  var error = '' ;
+  const newUser = {
+    FirstName: firstName,
+    LastName: lastName,
+    Password: password,
+    Mail: email,
+    currentBalance: 0,
+  };
+  var error = '';
 
-  try
-  {
+  try {
     const db = client.db("COP4331");
 
-    const userExists = await db.collection('Users').findOne({Mail: email});
-    if (userExists)
-    {
-      return res
-          .status(422)
-          .json({ error: "Email already exists" });
+    const userExists = await db.collection('Users').findOne({ Mail: email });
+    if (userExists) {
+      return res.status(422).json({ error: "Email already exists" });
     }
 
-    const result = db.collection('Users').insertOne(newUser);
-  }
-  catch(e)
-  {
+    // Add the user to the 'Users' collection
+    const result = await db.collection('Users').insertOne(newUser);
+
+    // Create a new document in the 'CategoryTotals' collection for the user
+    const newCategoryTotals = {
+      Mail: email,
+      totalGroc: 0,
+      totalRent: 0,
+      totalRes: 0,
+      totalEating: 0,
+      totalFun: 0,
+      totalGoal: 0,
+    };
+
+    await db.collection('CategoryTotals').insertOne(newCategoryTotals);
+  } catch (e) {
     error = e.toString();
   }
 
-  var ret = {error:error};
+  var ret = { error: error };
   res.status(200).json(ret);
 });
 
@@ -81,6 +93,32 @@ app.post('/api/addtransaction', async (req, res, next) => {
     // Check if the update was successful
     if (!updateResult || !updateResult.value) {
       throw new Error('Failed to update user balance');
+    }
+
+    // If the category is not "Income", update the corresponding category total in the CategoryTotals collection
+    if (category !== "Income") {
+      const categoryMapping = {
+        "Groceries": "totalGroc",
+        "Rent/Utilities": "totalRent",
+        "Eating Out": "totalEating",
+        "Fun Misc.": "totalFun",
+        "Responsibilities": "totalRes",
+      };
+
+      const categoryTotalField = categoryMapping[category];
+
+      if (categoryTotalField) {
+        const categoryUpdateResult = await db.collection('CategoryTotals').findOneAndUpdate(
+          { Mail: email },
+          { $inc: { [categoryTotalField]: parseFloat(amount) } },
+          { returnDocument: 'after' }
+        );
+
+        // Check if the category update was successful
+        if (!categoryUpdateResult || !categoryUpdateResult.value) {
+          throw new Error(`Failed to update ${category} total`);
+        }
+      }
     }
 
     // If the category is "Goal", update the currAmount in the Goals collection
@@ -143,6 +181,33 @@ app.delete('/api/deletetransaction/:id', async (req, res, next) => {
 
       // Update the user's currentBalance
       await db.collection('Users').updateOne(userFilter, update);
+
+      // If the transaction category is not "Income", update the corresponding category total in the CategoryTotals collection
+      if (transactionToDelete.transCat !== "Income") {
+        const categoryMapping = {
+          "Groceries": "totalGroc",
+          "Rent/Utilities": "totalRent",
+          "Eating Out": "totalEating",
+          "Fun Misc.": "totalFun",
+          "Responsibilities": "totalRes",
+          "Goal": "totalGoal",
+        };
+
+        const categoryTotalField = categoryMapping[transactionToDelete.transCat];
+
+        if (categoryTotalField) {
+          const categoryUpdateResult = await db.collection('CategoryTotals').findOneAndUpdate(
+            { Mail: transactionToDelete.Mail },
+            { $inc: { [categoryTotalField]: -amount } },
+            { returnDocument: 'after' }
+          );
+
+          // Check if the category update was successful
+          if (!categoryUpdateResult || !categoryUpdateResult.value) {
+            throw new Error(`Failed to update ${transactionToDelete.transCat} total`);
+          }
+        }
+      }
 
       // If the transaction category is "Goal", subtract the transaction amount from the currAmount in the Goals collection
       if (transactionToDelete.transCat === "Goal") {
@@ -357,6 +422,26 @@ app.get('/api/loadgoal', async (req, res) =>
 
 });
 
+// app.get('/api/categorytotals', async (req, res) => {
+//   const { email } = req.query; // Assuming you pass the email as a query parameter
+//   const filter = { Mail: email };
+
+//   let categoryTotals = [];
+
+//   try {
+//     const db = client.db("COP4331");
+//     categoryTotals = await db.collection('CategoryTotals').findOne(filter);
+//   } catch (e) {
+//     console.error('Error fetching category totals:', e);
+//   }
+
+//   res.status(200).json(categoryTotals);
+// });
+
+app.get('/api/categorytotals', async (req, res) => {
+
+
+});
 
 app.use((req, res, next) =>
 {
