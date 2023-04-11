@@ -255,7 +255,7 @@ function Transactions()
                 <option value="Eating Out">Eating Out</option>
                 <option value="Rent/Utilities">Rent/Utilities</option>
                 <option value="Responsibilities">Responsibilities</option>
-                <option value="Fun Misc">Fun Misc</option>
+                <option value="Fun Misc.">Fun Misc.</option>
                 <option value="Income">Income</option>
                 {hasGoal > 0 && <option value="Goal">Goal</option>}
                 </select>

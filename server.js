@@ -422,26 +422,22 @@ app.get('/api/loadgoal', async (req, res) =>
 
 });
 
-// app.get('/api/categorytotals', async (req, res) => {
-//   const { email } = req.query; // Assuming you pass the email as a query parameter
-//   const filter = { Mail: email };
-
-//   let categoryTotals = [];
-
-//   try {
-//     const db = client.db("COP4331");
-//     categoryTotals = await db.collection('CategoryTotals').findOne(filter);
-//   } catch (e) {
-//     console.error('Error fetching category totals:', e);
-//   }
-
-//   res.status(200).json(categoryTotals);
-// });
-
 app.get('/api/categorytotals', async (req, res) => {
+  const { email } = req.query; // Assuming you pass the email as a query parameter
+  const filter = { Mail: email };
 
+  let categoryTotals = [];
 
+  try {
+    const db = client.db("COP4331");
+    categoryTotals = await db.collection('CategoryTotals').findOne(filter);
+  } catch (e) {
+    console.error('Error fetching category totals:', e);
+  }
+
+  res.status(200).json(categoryTotals);
 });
+
 
 app.use((req, res, next) =>
 {
