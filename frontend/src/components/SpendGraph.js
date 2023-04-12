@@ -14,6 +14,7 @@ import {
     Pie,
     Cell,
   } from 'recharts';
+  import "./spendgraph.css";
 
 function SpendGraph()
 {
@@ -52,13 +53,24 @@ function SpendGraph()
               dy={16}
               textAnchor="middle"
               fill="#000"
-              fontSize={10}
-              transform="rotate(-25)"
+              fontSize={12}
+              transform="rotate(-10)"
             >
               {payload.value}
             </text>
           </g>
         );
+      };
+
+      const CustomTooltip = ({ active, payload }) => {
+        if (active && payload && payload.length) {
+          return (
+            <div className="custom-tooltip">
+              <p className="label">{`${payload[0].name} : $${parseFloat(payload[0].value).toFixed(2)}`}</p>
+            </div>
+          );
+        }
+        return null;
       };
 
 
@@ -76,71 +88,54 @@ function SpendGraph()
         setShowPieChart(!showPieChart);
       };
     
-      const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#333'];
+      const COLORS = ['#FFC857', '#E9724C', '#C5283D', '#255F85', '#49BEAA'];
 
     return(
         <div className="chart-div">
-        <ResponsiveContainer width="100%" height={340}>
-          {showPieChart ? (
-            <PieChart>
-              <Pie
+            <ResponsiveContainer width="100%" height={340}>
+            {showPieChart ? (
+                <PieChart>
+                <Pie
+                    data={data}
+                    dataKey="Total"
+                    nameKey="name"
+                    outerRadius={100}
+                    fill="#8884d8"
+                >
+                    {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend />
+                </PieChart>
+            ) : (
+                <BarChart
                 data={data}
-                dataKey="Total"
-                nameKey="name"
-                outerRadius={100}
-                fill="#8884d8"
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          ) : (
-            <BarChart
-              data={data}
-              margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000" />
-              <XAxis dataKey="name" stroke="#000" tick={<CustomizedAxisTick />} />
-              <YAxis stroke="#000" />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="Total" fill="#AEDD97" />
-            </BarChart>
-          )}
-        </ResponsiveContainer>
-        <button onClick={toggleChart}>
-          {showPieChart ? 'Show Bar Graph' : 'Show Pie Chart'}
-        </button>
+                margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                }}
+                barSize={80}
+                >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000" />
+                <XAxis dataKey="name" stroke="#000" tick={<CustomizedAxisTick />} />
+                <YAxis stroke="#000" />
+                <Tooltip content={<CustomTooltip />} />
+                {/* <Legend /> */}
+                <Bar dataKey="Total" fill="#AEDD97" />
+                </BarChart>
+            )}
+            </ResponsiveContainer>
+        <div className='swap-chart-btn'>
+          <button onClick={toggleChart}>
+            {showPieChart ? 'Show Bar Graph' : 'Show Pie Chart'}
+          </button>
+        </div>
       </div>
     );
   }
 
 export default SpendGraph;
-
-
-
-
-
-    // const convertDataForChart = (categoryTotals) => {
-    //     const data = [];
-      
-    //     for (const category in categoryTotals) {
-    //       if (categoryTotals.hasOwnProperty(category) && category !== 'Mail') {
-    //         data.push({
-    //           transCat: category,
-    //           totalAmount: categoryTotals[category],
-    //         });
-    //       }
-    //     }
-      
-    //     return data;
-    //   };

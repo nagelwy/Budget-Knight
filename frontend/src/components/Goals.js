@@ -68,19 +68,19 @@ function Goals()
         event.preventDefault();
 
         // If both fields are not filled out -> alert and return
-        if (!goalName.value || !savingsdesired.value) {
-          alert('Please enter goal name and amount');
-          return;
-      }
+      //   if (!goalName.value || !savingsdesired.value) {
+      //     alert('Please enter goal name and amount');
+      //     return;
+      // }
 
       const parsedSavingsdesired = parseInt(savingsdesired.value, 10);
-      const parsedCurrentAmount = parseInt(currentAmount.value, 10);
+      // const parsedCurrentAmount = parseInt(currentAmount.value, 10);
 
       const parsedEmail = userData.email;
       
         var obj = {
             savingsdesired: parsedSavingsdesired,
-            currentAmount: parsedCurrentAmount, 
+            currentAmount: 0, 
             email: parsedEmail,
             nameOfGoal: goalName.value
         };
@@ -247,15 +247,6 @@ function Goals()
           return;
       }
     }
-      // const editedGoal = { name: goalName, amount: goalAmount };
-      // const newGoals = [...goals];
-      // newGoals[editGoal] = editedGoal;
-      // setGoals(newGoals);
-      // setGoalName('');
-      // setGoalAmount(0);
-      // setEditGoal(null);
-  // };
-
 
 
     return (
@@ -271,14 +262,22 @@ function Goals()
 
         {/* If there is no goal we show the div stating "no goal" */}
         {hasGoal === false ? (
-          <div>
-            <div className="goal-add-btn">
-              <button className="fa fa-plus" onClick={() => setShowForm(prevShowForm => !prevShowForm)}></button> 
+
+          <div className="goal-container">
+            <div className="goal-header">
+              <h4>Add a Goal</h4>
             </div>
-          <div className="no-goal-container">
-            <p>No Goal</p>
+            <div className="goal-progress-container">
+              <div className="goal-progress-bar" style={{ width: `0%` }}></div>
+            </div>
+            <div className="goal-amounts">
+              <p className="current-amount"></p>
+              <p className="desired-amount"></p>
+            </div>
+            <div className="goal-buttons">
+            <button className="fa fa-plus" onClick={() => setShowForm(prevShowForm => !prevShowForm)}></button>
+            </div>
           </div>
-        </div>
         )
 
         // The user has a goal, display that goal's information
@@ -300,7 +299,7 @@ function Goals()
              </div>
 
                   <div className="goal-buttons">
-                    <button onClick={() => { setEditGoalName(newGoalName); setEditAmount(newCurrentAmount); setSavingsAmount(newSavingsDesired); setShowForm(true); }}>Edit</button>
+                    {/* <button onClick={() => { setEditGoalName(newGoalName); setEditAmount(newCurrentAmount); setSavingsAmount(newSavingsDesired); setShowForm(true); }}>Edit</button> */}
                     <button onClick={() => {
                       if (window.confirm("Are you sure you want to delete this goal?")) {
                               setGoalId(goalData.goalId);
@@ -318,14 +317,14 @@ function Goals()
 
                 {/* User inputs' for entering a Goal */}
                 <label htmlFor="name">Goal Name:</label>
-                <input type="text" id="amount" name="amount" value={goalName} ref={(c) => goalName = c} />
+                <input type="text" id="amount" name="amount" value={goalName} ref={(c) => goalName = c} required/>
 
                 <label htmlFor="amount">Goal Amount:</label>
-                <input type="number" id="amount" name="amount" value={savingsdesired} ref={(c) => savingsdesired = c} />
+                <input type="number" id="amount" name="amount" value={savingsdesired} ref={(c) => savingsdesired = c} required/>
                 
                 {/* This is temperary */}
-                <label htmlFor="amount">currentAmount:</label>
-                <input type="number" id="amount" name="amount" value={currentAmount} ref={(c) => currentAmount = c} />
+                {/* <label htmlFor="amount">currentAmount:</label>
+                <input type="number" id="amount" name="amount" value={currentAmount} ref={(c) => currentAmount = c} /> */}
 
                 <button type="submit">{hasGoal == 1 ? 'Update' : 'Add'}</button>
                 <button type="button" onClick={() => { setShowForm(false); setEditGoal(null); }}>Cancel</button>

@@ -291,7 +291,7 @@ function Transactions()
               {transactions.map((transaction) => (
                 <tr key={transaction._id}>
                   <td>{transaction.transName}</td>
-                  <td className={transaction.transCat === "Income" ? "income" : ""}>${transaction.transAmount}</td>
+                  <td className={transaction.transCat === "Income" ? "income" : ""}>${parseFloat(transaction.transAmount).toFixed(2)}</td>
                   <td>{transaction.transCat}</td>
                   <td>{transaction.transDate}</td>
                   <td className="del-btn-div"><button className="del-btn" onClick={() => {if (window.confirm("Are you sure you want to delete this transaction?")) {deleteTransaction(transaction._id);}}}>Delete</button></td>
