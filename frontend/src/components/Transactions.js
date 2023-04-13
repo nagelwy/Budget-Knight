@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 // import { Double, ObjectId } from 'mongodb';
 import { useEffect } from 'react';
 
-function Transactions() 
+function Transactions({ onTransacitonChange }) 
 {
   // Stores, firstName, lastName, email -> to access eg. userData.firstName
   var userData = JSON.parse(localStorage.getItem('user_data'));
@@ -107,7 +107,9 @@ function Transactions()
         // Update the current balance in localStorage
         userData.currentBalance = newBalance;
         localStorage.setItem("user_data", JSON.stringify(userData));
+        // loadTransactions();
         window.location.reload();
+        onTransacitonChange();
       }
     }   
     catch(e)
@@ -148,6 +150,8 @@ function Transactions()
         userData.currentBalance = newBalance;
         localStorage.setItem("user_data", JSON.stringify(userData));
         window.location.reload();
+        // loadTransactions();
+        onTransacitonChange();
       }
     } catch (e) {
       console.log(e.toString());
@@ -207,6 +211,8 @@ function Transactions()
     event.preventDefault();
     setShowForm(false);
   };
+
+  
 
   return (
     <div className="transaction-container">
@@ -276,30 +282,43 @@ function Transactions()
         
         )}
         {transactions.length > 0 && (
-        <div className="table-div"> 
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction._id}>
-                  <td>{transaction.transName}</td>
-                  <td className={transaction.transCat === "Income" ? "income" : ""}>${parseFloat(transaction.transAmount).toFixed(2)}</td>
-                  <td>{transaction.transCat}</td>
-                  <td>{transaction.transDate}</td>
-                  <td className="del-btn-div"><button className="del-btn" onClick={() => {if (window.confirm("Are you sure you want to delete this transaction?")) {deleteTransaction(transaction._id);}}}>Delete</button></td>
+          <div className="table-div">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {transactions
+                  .sort((a, b) => new Date(a.transDate) - new Date(b.transDate))
+                  .map((transaction) => (
+                    <tr key={transaction._id}>
+                      <td>{transaction.transName}</td>
+                      <td className={transaction.transCat === "Income" ? "income" : ""}>${parseFloat(transaction.transAmount).toFixed(2)}</td>
+                      <td>{transaction.transCat}</td>
+                      <td>{transaction.transDate}</td>
+                      <td className="del-btn-div">
+                        <button
+                          className="del-btn"
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this transaction?")) {
+                              deleteTransaction(transaction._id);
+                            }
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

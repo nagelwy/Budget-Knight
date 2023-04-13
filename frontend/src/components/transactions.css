@@ -106,8 +106,12 @@ table {
     background-color: #45a049;
   }
 
+
   .table-div{
     padding: 20px;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 750px; /* Adjust this value based on the desired maximum height */
   }
 
   .head-name{
@@ -170,3 +174,22 @@ table {
     display: flex;
     flex-direction: column;
   }
+
+  /* Add this to your CSS file */
+.sort-arrow {
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  vertical-align: middle;
+}
+
+.rotate-ascending {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.rotate-descending {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}

@@ -16,7 +16,7 @@ import {
   } from 'recharts';
   import "./spendgraph.css";
 
-function SpendGraph()
+function SpendGraph({ updateFlag })
 {
 
     const [categoryTotals, setCategoryTotals] = useState([]);
@@ -39,7 +39,7 @@ function SpendGraph()
 
     useEffect(() => {
     fetchCategoryTotals();
-    }, []);
+    }, [updateFlag]);
 
 
     const CustomizedAxisTick = (props) => {
@@ -53,7 +53,7 @@ function SpendGraph()
               dy={16}
               textAnchor="middle"
               fill="#000"
-              fontSize={12}
+              fontSize={15}
               transform="rotate(-10)"
             >
               {payload.value}
@@ -124,7 +124,6 @@ function SpendGraph()
                 <XAxis dataKey="name" stroke="#000" tick={<CustomizedAxisTick />} />
                 <YAxis stroke="#000" />
                 <Tooltip content={<CustomTooltip />} />
-                {/* <Legend /> */}
                 <Bar dataKey="Total" fill="#AEDD97" />
                 </BarChart>
             )}
