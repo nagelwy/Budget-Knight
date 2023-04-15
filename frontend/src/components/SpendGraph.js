@@ -82,13 +82,13 @@ function SpendGraph({ updateFlag })
         { name: 'Fun/Misc.', Total: categoryTotals.totalFun || 0 },
       ] : [];
 
-      const [showPieChart, setShowPieChart] = useState(false);
+      const [showPieChart, setShowPieChart] = useState(true);
 
       const toggleChart = () => {
         setShowPieChart(!showPieChart);
       };
     
-      const COLORS = ['#FFC857', '#E9724C', '#C5283D', '#255F85', '#49BEAA'];
+      const COLORS = ['#91B496', '#D9B08C', '#465D63', '#255F85', '#49BEAA'];
 
     return(
         <div className="chart-div">
@@ -129,9 +129,9 @@ function SpendGraph({ updateFlag })
             )}
             </ResponsiveContainer>
         <div className='swap-chart-btn'>
-          <button onClick={toggleChart}>
+        <button onClick={toggleChart} style={{ backgroundColor: '#333' }}>
             {showPieChart ? 'Show Bar Graph' : 'Show Pie Chart'}
-          </button>
+        </button>
         </div>
       </div>
     );

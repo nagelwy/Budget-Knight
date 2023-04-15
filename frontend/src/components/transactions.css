@@ -193,3 +193,8 @@ table {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
 }
+
+button:hover {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}

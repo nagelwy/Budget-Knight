@@ -53,29 +53,17 @@ const NavBarMain = ({}) =>{
         navigate('/register')
     }
   return (
-    <header>
-        <h3 className="logo"> Logo</h3>
-        <nav ref={navRef}>
-            <a href="#home">Home</a>
-            <a href="#misson">Mission</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact Us</a>
-            <button className = "nav-btn nav-close-btn" onClick={showNavbar}>
-                <FaTimes/>
-            </button>
+    <header className="header-div">
+        <img className="logo-main" src="/lastlogo.png" alt="Budget-Knight Logo" />
            
-         <button onClick={logout}>Logout</button>
+        <span>Current Balance: ${currentBalance.toFixed(2)}</span>
 
          <div className="balance">
-          <span>Current Balance: ${currentBalance.toFixed(2)}</span>
+          
+          <button className='logout-btn' onClick={logout}>Logout</button>
         </div>
-        </nav>
-        <div className = "logsignup-btn">
-            
-        </div>
-        <button className="nav-btn" onClick={showNavbar}>
-            <FaBars/>
-        </button>
+ 
+
     </header>
   )
 }
