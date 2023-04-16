@@ -8,7 +8,7 @@
 }
 
 :root{
-    --mainColor: #AEDD97 !important;
+    --mainColor: #333 !important;
     --mainColorLight: #43d181;
     --secondaryColor: #ca1616;
     --textColor: #ffffff;
@@ -35,32 +35,12 @@ nav a:hover{
     color: var(--secondaryColor);
 }
 
-header .logo {
-
+.logout-btn{
+    height: 50px;
+    width: 120px;
+    border-radius: 25px;
 }
 
-header .login-btn {
-    padding: 5px;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--textColor);
-    font-size: 1rem;
-    justify-content: right;
-}
-
-header .signup-btn {
-    padding: 5px;
-    cursor: pointer;
-    color: #000 !important;
-    background: var(#ffffff);
-    border: none;
-    border-radius: 5px;
-    outline: none;
-    color: var(--textColor);
-    font-size: 1rem;
-}
 
 header .nav-btn {
     padding: 5px;
@@ -125,3 +105,13 @@ header .logsignup-btn {
         font-size: 1.5rem;
     }
 }
+
+.logo-main{
+    height:70px;
+    border-radius: 10px;
+}
+
+button:hover {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }

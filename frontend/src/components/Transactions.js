@@ -4,10 +4,41 @@ import { Link } from 'react-router-dom';
 // import { Double, ObjectId } from 'mongodb';
 import { useEffect } from 'react';
 
-function Transactions() 
+function Transactions({ onTransacitonChange }) 
 {
   // Stores, firstName, lastName, email -> to access eg. userData.firstName
   var userData = JSON.parse(localStorage.getItem('user_data'));
+
+  // Stores, currAmount, desiredSavings, goalId -> to access eg. goalData.currAmount
+  var goalData = JSON.parse(localStorage.getItem('goal_data'));
+
+    // Used to check if the user already has a goal
+    // cpdateGoal: if(user has goal) hasGoal = 1
+    // if(user does not have a goal) hasGoal = 0
+    const [hasGoal, setHasGoal] = useState(false);
+    useEffect(() => {
+      checkGoal();
+    }, []);
+
+    const checkGoal = async event =>
+    {
+
+        const parsedEmail = userData.email;
+
+        try
+        {
+            const response = await fetch(buildPath(`api/checkgoal?email=${parsedEmail}`),
+            {method:'GET',headers:{'Content-Type': 'application/json'}});
+
+            let res = await response.json();
+            setHasGoal(res)
+
+        }   
+        catch(e)
+        {
+            console.log(e.toString());
+        }
+    }
 
   useEffect(() => {
     loadTransactions();
@@ -68,8 +99,17 @@ function Transactions()
       }
       else
       {
-      setMessage("Transaction has been added!");
-      window.location.reload();
+        setMessage("Transaction has been added!");
+        const balanceChange = categoryFE === "Income" ? parsedAmount : -parsedAmount;
+
+        const newBalance = parseFloat(userData.currentBalance) + balanceChange;
+
+        // Update the current balance in localStorage
+        userData.currentBalance = newBalance;
+        localStorage.setItem("user_data", JSON.stringify(userData));
+        // loadTransactions();
+        window.location.reload();
+        onTransacitonChange();
       }
     }   
     catch(e)
@@ -78,50 +118,54 @@ function Transactions()
     }
   };
 
-  const deleteTransaction = async event =>
-  {
-    event.preventDefault();
-
-    var obj = {
-      _id: objID.value
-    };
-    var js = JSON.stringify(obj);
-
-    try
-    {
-      const response = await fetch(buildPath('api/deletetransaction'),
-      {method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
-
-      let txt = await response.text();
-      let res = JSON.parse(txt);
-
-      if(res.error.length > 0)
-      {
-        setMessage("API Error: " + res.error);
+  const deleteTransaction = async (transactionId) => {
+    try {
+      const transactionToDelete = transactions.find((transaction) => transaction._id === transactionId);
+  
+      if (!transactionToDelete) {
+        console.log("Transaction not found");
+        return;
       }
-      else
-      {
-        setMessage("Transaction has been deleted!");
+  
+      const response = await fetch(buildPath(`api/deletetransaction/${transactionId}`), {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      let res = await response.json();
+  
+      if (res.error.length > 0) {
+        console.log("API Error: " + res.error);
+      } else {
+        console.log("Transaction has been deleted!");
+        setTransactions(transactions.filter((transaction) => transaction._id !== transactionId));
+  
+        const transactionAmount = parseFloat(transactionToDelete.transAmount);
+        const newBalance =
+          transactionToDelete.transCat === "Income"
+            ? parseFloat(userData.currentBalance) - transactionAmount
+            : parseFloat(userData.currentBalance) + transactionAmount;
+  
+        // Update the current balance in localStorage
+        userData.currentBalance = newBalance;
+        localStorage.setItem("user_data", JSON.stringify(userData));
+        window.location.reload();
+        // loadTransactions();
+        onTransacitonChange();
       }
-    }   
-    catch(e)
-    {
-      setMessage(e.toString());
+    } catch (e) {
+      console.log(e.toString());
     }
-  }
+  };
 
   const loadTransactions = async event =>
   {
-
-    // const userData = JSON.parse(localStorage.getItem('user_data'));
     const email = userData.email;
   
     try {
       const response = await fetch(`/api/loadtransactions?email=${email}`);
-      console.log('response:', response);
 
       const data = await response.json();
-      console.log('data:', data);
   
       if (data.error) {
         console.error(data.error);
@@ -135,12 +179,6 @@ function Transactions()
 
   const [showForm, setShowForm] = useState(false);
   const [transactions, setTransactions] = useState([]);
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   amount: '',
-  //   category: '',
-  //   date: ''
-  // });
   
   // const handleInputChange = (e) => {
   //   const { name, value } = e.target;
@@ -169,8 +207,13 @@ function Transactions()
     setShowForm(false);
   };
 
+  const handleCancelClick = (event) => {
+    event.preventDefault();
+    setShowForm(false);
+  };
+
   
-  
+
   return (
     <div className="transaction-container">
       <div>
@@ -209,8 +252,8 @@ function Transactions()
                 <select
                 id="transactionCategory"
                 name="transactionCategory"
-                value={formData.category}
-                onChange={handleInputChange}
+                // value={formData.category}
+                // onChange={handleInputChange}
                 required
                 >
                 <option value="">Select Category</option>
@@ -218,7 +261,9 @@ function Transactions()
                 <option value="Eating Out">Eating Out</option>
                 <option value="Rent/Utilities">Rent/Utilities</option>
                 <option value="Responsibilities">Responsibilities</option>
-                <option value="Fun Misc">Fun Misc</option>
+                <option value="Fun Misc.">Fun Misc.</option>
+                <option value="Income">Income</option>
+                {hasGoal > 0 && <option value="Goal">Goal</option>}
                 </select>
                 <label htmlFor="date">Date:</label>
                 <input
@@ -229,33 +274,51 @@ function Transactions()
                 // onChange={handleInputChange}
                 required
                 />
-                <button type="submit">Add</button>
+                <div className='trans-btn-div'>
+                  <button type="submit">Add</button>
+                  <button type="button" onClick={handleCancelClick}>Cancel</button>
+                </div>
             </form>
         
         )}
         {transactions.length > 0 && (
-        <div className="table-div"> 
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Category</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction._id}>
-                  <td>{transaction.transName}</td>
-                  <td>${transaction.transAmount}</td>
-                  <td>{transaction.transCat}</td>
-                  <td>{transaction.transDate}</td>
+          <div className="table-div">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {transactions
+                  .sort((a, b) => new Date(a.transDate) - new Date(b.transDate))
+                  .map((transaction) => (
+                    <tr key={transaction._id}>
+                      <td>{transaction.transName}</td>
+                      <td className={transaction.transCat === "Income" ? "income" : ""}>${parseFloat(transaction.transAmount).toFixed(2)}</td>
+                      <td>{transaction.transCat}</td>
+                      <td>{transaction.transDate}</td>
+                      <td className="del-btn-div">
+                        <button
+                          className="del-btn"
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to delete this transaction?")) {
+                              deleteTransaction(transaction._id);
+                            }
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
