@@ -66,11 +66,7 @@ function Login()
     return(
         <div className="login-div">
 
-            <div className="leftside-login">
-
-
-            </div>
-
+            <div className="leftside-login"></div>
 
             <div className="rightside-login">
 
@@ -88,18 +84,15 @@ function Login()
                 <span className="login-sub">Password</span>
                 <input className="form-control"type="password" id="loginPassword"ref={(c) => loginPassword = c} />
                 <br />
-
+                <span id="loginResult">{message}</span>
                 <div className="btn-div">
                 <input type="submit" id="loginButton" className="button" value = "Enter"
                 onClick={DoLogin} />
                 </div>
-              
-              </form>
-              <span id="loginResult">{message}</span> 
-
-              <div className="reg-link">
+                <div className="reg-link">
                 <p id="register-redirect">New to Budget Knight?<Link to="/register"><b> Create an account</b></Link></p>
               </div>
+              </form>
 
             </div>
 

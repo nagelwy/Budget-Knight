@@ -9,6 +9,7 @@
 
 :root{
     --mainColor: #AEDD97 !important;
+    --secMainColor: #2d3032;
     --mainColorLight: #43d181;
     --secondaryColor: #ca1616;
     --textColor: #ffffff;
@@ -23,7 +24,7 @@ header {
     justify-content: center;
     height: 80px;
     padding: 0 2rem;
-    background-color: var(--mainColor);
+    background-color: var(--secMainColor) !important;
     color: var(--textColor);
 }
 

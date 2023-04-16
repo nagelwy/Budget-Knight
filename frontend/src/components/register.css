@@ -6,16 +6,23 @@ body
     padding: 0;
 }
 
+p {
+    margin: 0;
+}
+
 .login-div {
     display: flex;
     height: 100%;
     margin: 0;
 }
 
-@media screen and(min-width:768px){
+@media screen and (max-width:768px){
 
     .leftside-register, .rightside-register{
         height: 100vh;
+    }
+    p {
+        font-size: 15px !important;
     }
 
 }
@@ -52,7 +59,7 @@ form {
     border-radius: 6px;
     height: 20px;
     width: 300px;
-    padding-bottom: 5px;
+    padding: 5px 0;
     margin-bottom: 10px;
 }
 
@@ -103,7 +110,7 @@ form {
     border-radius: 6px;
     height: 20px;
     width: 140px;
-    padding-bottom: 5px;
+    padding: 5px 0;
     margin-bottom: 10px;
 }
 
@@ -115,6 +122,10 @@ form {
     padding-right: 10px;
 }
 
+.log-link {
+    margin: 0;
+    font-size: 15px;
+}
 #inner-title{
     font-family: 'Inter';
     font-style: normal;

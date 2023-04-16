@@ -65,52 +65,46 @@ function Register()
 
             <div className="leftside-register">
 
-            <h1 className="login-header">
-                Welcome to Budget Knight, <br /> your financial ally!
-              </h1>
+                <h1 className="login-header">
+                    put logo here
+                </h1>
 
                <form onSubmit={doRegister}>
 
-                <span id="inner-title"> Create your Account:</span>
+                <span id="inner-title"> Sign up and take your first steps 
+                towards financial freedom</span>
 
                 <div className="name-div">
                     <div className="fn-div">
-                        <input className="name-control" type="text" id="newFirstName" placeholder="First Name" ref={(c) => newFirstName = c}/>
+                        <input className="name-control" type="text" id="newFirstName" placeholder=" First Name" ref={(c) => newFirstName = c}/>
                     </div>
 
                     <div className="ln-div">
-                        <input className="name-control" type="text" id="newLastName" placeholder="Last Name"ref={(c) => newLastName = c}/>
+                        <input className="name-control" type="text" id="newLastName" placeholder=" Last Name"ref={(c) => newLastName = c}/>
                     </div>
 
                 </div>
                 <br />
 
-                <input className="form-control" type="text" id="newEmail" placeholder="Email address" ref={(c) => newEmail = c}/>
+                <input className="form-control" type="text" id="newEmail" placeholder=" Email address" ref={(c) => newEmail = c}/>
                 
 
 
-                <input className="form-control"type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c}/>
+                <input className="form-control"type="password" id="loginPassword" placeholder=" Password" ref={(c) => loginPassword = c}/>
                 <br />
-
+                <span id="loginResult">{message}</span> 
                 <div className="btn-div">
                     <input type="submit" id="loginButton" className="button" value = "Enter"
                     onClick={doRegister} />
                 </div>
 
-                
+                <div className="log-link">
+                    <p id="login-redirect">Already a member? <Link to="/login"><b>Log in</b></Link> </p>
+                </div>  
               
               </form>
-            <span id="loginResult">{message}</span> 
-
-            <div className="reg-link">
-                <p id="login-redirect">Already a member? </p> 
-                <br />
-                <Link to="/login"><b>Log in</b></Link>
-            </div>
         
             </div>
-
-
             <div className="rightside-register">
 
 
