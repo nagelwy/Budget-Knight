@@ -17,9 +17,10 @@ function Goals()
     // cpdateGoal: if(user has goal) hasGoal = 1
     // if(user does not have a goal) hasGoal = 0
     const [hasGoal, setHasGoal] = useState(false);
+    const [reload, setReload] = useState(false);
     useEffect(() => {
       checkGoal();
-    }, []);
+    }, [reload]);
 
 
     // loadGoal: updates currAmount, desiredSavings, and goalId
@@ -29,7 +30,7 @@ function Goals()
     const [goalId, setGoalId] = useState(null);
     useEffect(() => {
       loadGoal();
-    }, []);
+    }, [reload]);
 
     // Used to deliver error/submission messages to the user
     const [message,setMessage] = useState('');
@@ -57,10 +58,8 @@ function Goals()
     // const goalName = useRef();
 
     const [showForm, setShowForm] = useState(false);
-    const [editGoalName, setEditGoalName] = useState(0);
-    const [editAmount, setEditAmount] = useState(0);
-    const [savingsAmount, setSavingsAmount] = useState(0);
     const [editGoal, setEditGoal] = useState(null);
+    
 
 
     const createGoal = async event =>
@@ -101,8 +100,8 @@ function Goals()
             else
             {
                 console.log("Goal has been added!");
-                window.location.reload();
-                loadGoal();
+                setReload(!reload);
+                setShowForm(false);
             }
         }   
         catch(e)
@@ -199,7 +198,7 @@ function Goals()
             else
             {
                 setMessage("Goal has been updated!");
-                window.location.reload();
+                setReload(!reload);
             }
         }   
         catch(e)
@@ -231,7 +230,7 @@ function Goals()
             else
             {
                 console.log("Goal has been deleted!");
-                window.location.reload();
+                setReload(!reload);
             }
         }   
         catch(e)
@@ -299,7 +298,6 @@ function Goals()
              </div>
 
                   <div className="goal-buttons">
-                    {/* <button onClick={() => { setEditGoalName(newGoalName); setEditAmount(newCurrentAmount); setSavingsAmount(newSavingsDesired); setShowForm(true); }}>Edit</button> */}
                     <button onClick={() => {
                       if (window.confirm("Are you sure you want to delete this goal?")) {
                               setGoalId(goalData.goalId);
