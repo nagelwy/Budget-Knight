@@ -22,8 +22,51 @@ const client = new MongoClient(url);
 client.connect();
 
 const nodemailer = require("nodemailer");
+const sgMail = require('@sendgrid/mail');
+const API_KEY = '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';
+
+sgMail.setApiKey(API_KEY);
+
 const jwt = require('jsonwebtoken');
 const secretKey = 'test';
+
+app.post('/api/verify-email', async (req, res, next) => {
+  const { email } = req.body;
+
+  try {
+    const db = client.db('COP4331');
+
+    const user = await db.collection('Users').findOne({ Mail: email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (user.isVerified) {
+      return res.status(200).json({ message: 'User is already verified' });
+    }
+
+    const token = user.JWToken;
+
+    jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        console.error(err);
+        return res.status(401).json({ error: 'Invalid or expired token' });
+      }
+
+      try {
+        await db.collection('Users').updateOne({ Mail: email }, { $set: { isVerified: true } });
+
+        res.status(200).json({ message: 'Email verified' });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update user' });
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to verify email' });
+  }
+});
 
 app.post('/api/register', async (req, res, next) => {
   //incoming :
@@ -49,24 +92,21 @@ app.post('/api/register', async (req, res, next) => {
 
   var error = '';
 
-  let transporter = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "72aa4d60c1264f", // generated ethereal user
-      pass: "80f29a38f9515d", // generated ethereal password
-    },
-  });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: 'info@mailtrap.club', // sender address
-    to: email, // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
-  });
+  const msg = {
+    to: email, // Change to your recipient
+    from: 'ucfBudgetKnight@gmail.com', // Change to your verified sender
+    subject: 'Sending with SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+  }
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 
   try {
     const db = client.db("COP4331");
