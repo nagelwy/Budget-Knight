@@ -25,33 +25,6 @@ const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
 const secretKey = 'test';
 
-app.post('/api/verification', async (req, res, next) => {
-
-  var error = '';
-
-  let transporter = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "72aa4d60c1264f", // generated ethereal user
-      pass: "80f29a38f9515d", // generated ethereal password
-    },
-  });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: 'info@mailtrap.club', // sender address
-    to: "nagelwyatt@yahoo.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
-  });
-
-  var ret = { error: error };
-  res.status(200).json(ret);
-});
-
 app.post('/api/register', async (req, res, next) => {
   //incoming :
   //outgoing: stores FirstName, LastName, Mail, Login, Password
@@ -75,6 +48,25 @@ app.post('/api/register', async (req, res, next) => {
   };
 
   var error = '';
+
+  let transporter = nodemailer.createTransport({
+    host: "sandbox.smtp.mailtrap.io",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "72aa4d60c1264f", // generated ethereal user
+      pass: "80f29a38f9515d", // generated ethereal password
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: 'info@mailtrap.club', // sender address
+    to: email, // list of receivers
+    subject: "Hello ✔", // Subject line
+    text: "Hello world?", // plain text body
+    html: "<b>Hello world?</b>", // html body
+  });
 
   try {
     const db = client.db("COP4331");
