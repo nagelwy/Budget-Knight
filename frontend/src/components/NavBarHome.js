@@ -20,8 +20,8 @@ function NavBarHome() {
         navigate('/register')
     }
   return (
-    <header>
-        <h3 className="logo"> Logo</h3>
+    <header className='home-head'>
+        <img className="logo-main" src="/lastlogo.png" alt="Budget-Knight Logo" />
         <nav ref={navRef}>
             <a href="#home">Home</a>
             <a href="#mission">Mission</a>
@@ -36,15 +36,16 @@ function NavBarHome() {
             <button className = "nav-btn nav-close-btn" onClick={showNavbar}>
                 <FaTimes/>
             </button>
+            <div className = "logsignup-btn">
+                <button className = "login-btn" onClick={goToLogIn}> 
+                Log in
+                </button>
+                <button className = "signup-btn" onClick={goToSignUp}> 
+                Get Started
+                </button>
+            </div>
         </nav>
-        <div className = "logsignup-btn">
-            <button className = "login-btn" onClick={goToLogIn}> 
-            Log in
-            </button>
-            <button className = "signup-btn" onClick={goToSignUp}> 
-            Get Started
-            </button>
-        </div>
+
         <button className="nav-btn" onClick={showNavbar}>
             <FaBars/>
         </button>
