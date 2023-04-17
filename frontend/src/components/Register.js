@@ -66,7 +66,12 @@ function Register()
             <div className="leftside-register">
 
                 <h1 className="login-header">
-                    put logo here
+                    <Link to="/">
+                        <img className="logo-main" src="/lastlogo.png" alt="Budget-Knight Logo" />
+                    </Link>
+                    
+                    <br />
+                    Welcome!
                 </h1>
 
                <form onSubmit={doRegister}>
@@ -107,8 +112,10 @@ function Register()
             </div>
             <div className="rightside-register">
 
+            <div className="abe-div">
+                <img className="reg-abe" src="/abe.png" alt="Budget-Knight Logo" />
+              </div>
 
-            
 
             </div>
 

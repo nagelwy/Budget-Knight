@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import MainPage from './pages/MainPage';
+import ForgotPage from './pages/ForgotPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/login" index element={<LoginPage />} />
       <Route path="/register" index element={<RegisterPage />} />
       <Route path="/main" index element={<MainPage />} />
+      <Route path="/forgot" index element={<ForgotPage />} />
     </Routes>
   </BrowserRouter>
 );

@@ -1,10 +1,11 @@
 body 
 {
-    background-color: #BAA796;
+    background-color: white;
     font-family: 'Otomanopee One';font-size: 22px;
     height: 100%;
     padding: 0;
 }
+
 
 .login-div {
     display: flex;
@@ -29,6 +30,8 @@ body
 
 .leftside-login {
     background-color: #AEDD97; /* Change to desired color */
+    display: flex;
+    justify-content: center;
 }
 
 .rightside-login {
@@ -110,4 +113,23 @@ a:visited
 {
     font-size: 15px;
     margin: 0 0 !important;
+}
+
+.login-ben{
+    height: 600px;
+    border-radius: 25px;
+    
+}
+
+.ben-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 200px;
+}
+
+
+#loginResult{
+    text-align: center;
+    font-size: 15px;
 }

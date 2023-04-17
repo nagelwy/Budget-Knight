@@ -39,8 +39,9 @@ p {
 }
 
 .rightside-register{
-     
     background-color: #AEDD97; /* Change to desired color */
+    display: flex;
+    justify-content: center;
 }
 
 form {
@@ -132,4 +133,17 @@ form {
     font-size: 20px;
     text-align: center;
     padding-bottom: 10px;
+}
+
+.reg-abe{
+    height: 600px;
+    border-radius: 25px;
+    
+}
+
+.abe-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 200px;
 }

@@ -5,7 +5,7 @@ body {
 :root{
     --mainColor: #AEDD97;
     --mainColorLight: #43d181;
-    --secondaryColor: #ca1616;
+    --secondaryColor: #3a4c40;
     --textColor: #ffffff;
 }
 
@@ -41,13 +41,14 @@ h3 {
 .home-signup-btn {
     padding: 5px;
     cursor: pointer;
-    color: #000 !important;
+    color: white !important;
     background: var(--mainColor) !important;
     border: none;
     border-radius: 5px;
     outline: none;
     font-size: 1rem;
     justify-content: right;
+    background-color: black;
 }
 
 .services .grid-container {

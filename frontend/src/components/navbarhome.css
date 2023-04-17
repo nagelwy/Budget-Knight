@@ -11,17 +11,19 @@
     --mainColor: #AEDD97 !important;
     --secMainColor: #2d3032;
     --mainColorLight: #43d181;
-    --secondaryColor: #ca1616;
+    --secondaryColor: #3a4c40;
     --textColor: #ffffff;
 }
 
-header {
+
+
+.home-head{
     position: sticky;
     top: 0;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: space-between;
     height: 80px;
     padding: 0 2rem;
     background-color: var(--secMainColor) !important;

@@ -6,7 +6,6 @@ import {useContext} from 'react';
 function Login()
 {
 
-  console.log("here");
 
   let loginEmail;
   let loginPassword;
@@ -66,9 +65,18 @@ function Login()
     return(
         <div className="login-div">
 
-            <div className="leftside-login"></div>
+            <div className="leftside-login">
+              <div className="ben-div">
+                <img className="login-ben" src="/newben.png" alt="Budget-Knight Logo" />
+              </div>
+
+              </div>
+
+            
 
             <div className="rightside-login">
+
+              
 
               <h1 className="login-header">
                 Hello There, <br /> Fiscal Friend!
@@ -91,7 +99,9 @@ function Login()
                 </div>
                 <div className="reg-link">
                 <p id="register-redirect">New to Budget Knight?<Link to="/register"><b> Create an account</b></Link></p>
-              </div>
+                <p id="register-redirect"><Link to="/forgot"><b>Reset your password</b></Link></p>
+                </div>
+
               </form>
 
             </div>
