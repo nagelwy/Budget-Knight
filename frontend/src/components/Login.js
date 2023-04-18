@@ -42,13 +42,17 @@ function Login()
 
           var res = JSON.parse(await response.text());
 
-          if( !res.email )
+          if ( !res.email )
           {
               setMessage('Email/Password combination incorrect');
           }
+          else if (!res.isVerified)
+          {
+            setMessage('Account has not yet been verified');
+          }
           else
           {
-              var user = {firstName:res.firstName, lastName:res.lastName, email: res.email, currentBalance: res.currentBalance}
+              var user = {firstName:res.firstName, lastName:res.lastName, email: res.email, currentBalance: res.currentBalance, isVerified: res.isVerified}
               localStorage.setItem('user_data', JSON.stringify(user));
 
               setMessage('');

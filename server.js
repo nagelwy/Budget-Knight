@@ -1,4 +1,5 @@
 const express = require('express');
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
@@ -23,14 +24,85 @@ client.connect();
 
 const nodemailer = require("nodemailer");
 const sgMail = require('@sendgrid/mail');
-const API_KEY = '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';
 
-sgMail.setApiKey(API_KEY);
+sgMail.setApiKey(process.env.API_KEY);
 
 const jwt = require('jsonwebtoken');
 const secretKey = 'test';
 
-app.post('/api/verify-email', async (req, res, next) => {
+app.post('/api/password-reset', async (req, res, next) => {
+  const { email } = req.body;
+
+  try {
+    const db = client.db('COP4331');
+
+    const user = await db.collection('Users').findOne({ Mail: email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const token = jwt.sign({ email }, secretKey, { expiresIn: '1h' });
+
+    await db.collection('Users').updateOne({ Mail: email }, { $set: { JWToken: token } });
+
+    const msg = {
+      to: email,
+      from: 'ucfBudgetKnight@gmail.com',
+      subject: 'Password Reset Request',
+      text: 'Please click on the link to reset your password:',
+      html: `<p>Please click <a href="http://localhost:3000/reset/${token}">here</a> to reset your password.</p>`
+    };
+
+    await sgMail.send(msg);
+
+    res.status(200).json({ message: 'Password reset email sent' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to send password reset email' });
+  }
+});
+
+app.post('/api/password/reset/:token', async (req, res, next) => {
+  const { token } = req.params;
+  const { email, password } = req.body;
+
+  try {
+    const db = client.db('COP4331');
+
+    const user = await db.collection('Users').findOne({ Mail: email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (user.resetToken !== token) {
+      return res.status(401).send('Invalid or expired token');
+    }
+
+    jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        console.error(err);
+        return res.status(401).send('Invalid or expired token');
+      }
+
+      try {
+        if (decoded.email === email) {
+          await db.collection('Users').updateOne({ Mail: email }, { $set: { Password: password } });
+          return res.status(200).send('Password updated');
+        } else {
+          return res.status(401).send('Invalid token');
+        }
+      } catch (err) {
+        console.error(err);
+        res.status(500).send('Failed to update user');
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to reset password');
+  }
+});
+
+app.post('/api/verification', async (req, res, next) => {
   const { email } = req.body;
 
   try {
@@ -45,26 +117,63 @@ app.post('/api/verify-email', async (req, res, next) => {
       return res.status(200).json({ message: 'User is already verified' });
     }
 
-    const token = user.JWToken;
+    const token = jwt.sign({ email }, secretKey);
+
+    await db.collection('Users').updateOne({ Mail: email }, { $set: { JWToken: token } });
+
+    const msg = {
+      to: email,
+      from: 'ucfBudgetKnight@gmail.com',
+      subject: 'Verification Email',
+      text: 'Please click on the link to verify your email address:',
+      html: `<a href="http://localhost:5000/verify?email=${email}&token=${token}">https://http://localhost:5000/verify?email=${email}&token=${token}</a>`,
+    };
+
+    await sgMail.send(msg);
+
+    res.status(200).json({ message: 'Verification email sent' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to send verification email' });
+  }
+});
+
+app.get('/verify', async (req, res, next) => {
+  const { email, token } = req.query;
+
+  try {
+    const db = client.db('COP4331');
+
+    const user = await db.collection('Users').findOne({ Mail: email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (user.isVerified) {
+      return res.status(200).send('User is already verified');
+    }
 
     jwt.verify(token, secretKey, async (err, decoded) => {
       if (err) {
         console.error(err);
-        return res.status(401).json({ error: 'Invalid or expired token' });
+        return res.status(401).send('Invalid or expired token');
       }
 
       try {
-        await db.collection('Users').updateOne({ Mail: email }, { $set: { isVerified: true } });
-
-        res.status(200).json({ message: 'Email verified' });
+        if (decoded.email === email) {
+          await db.collection('Users').updateOne({ Mail: email }, { $set: { isVerified: true } });
+          return res.status(200).send('Email verified');
+        } else {
+          return res.status(401).send('Invalid token');
+        }
       } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Failed to update user' });
+        res.status(500).send('Failed to update user');
       }
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to verify email' });
+    res.status(500).send('Failed to verify email');
   }
 });
 
@@ -91,22 +200,6 @@ app.post('/api/register', async (req, res, next) => {
   };
 
   var error = '';
-
-  const msg = {
-    to: email, // Change to your recipient
-    from: 'ucfBudgetKnight@gmail.com', // Change to your verified sender
-    subject: 'Sending with SendGrid is Fun',
-    text: 'and easy to do anywhere, even with Node.js',
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-  }
-  sgMail
-    .send(msg)
-    .then(() => {
-      console.log('Email sent')
-    })
-    .catch((error) => {
-      console.error(error)
-    })
 
   try {
     const db = client.db("COP4331");
@@ -445,16 +538,18 @@ app.post('/api/login', async (req, res, next) =>
   var fn = '';
   var ln = '';
   var cb = 0;
+  var verified = false;
 
   if( results.length > 0 )
   {
     mail = results[0].Mail;
     fn = results[0].FirstName;
     ln = results[0].LastName;
-    cb = results[0].currentBalance
+    cb = results[0].currentBalance;
+    verified = results[0].isVerified;
   }
 
-  var ret = { email:mail, firstName:fn, lastName:ln, currentBalance: cb, error:''};
+  var ret = { email:mail, firstName:fn, lastName:ln, currentBalance: cb, isVerified: verified, error:''};
   res.status(200).json(ret);
 });
 

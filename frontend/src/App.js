@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import MainPage from './pages/MainPage';
 import ForgotPage from './pages/ForgotPage';
+import NewPasswordPage from './pages/NewPasswordPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="/register" index element={<RegisterPage />} />
       <Route path="/main" index element={<MainPage />} />
       <Route path="/forgot" index element={<ForgotPage />} />
+      <Route path="/reset/:token" index element={<NewPasswordPage />} />
     </Routes>
   </BrowserRouter>
 );
