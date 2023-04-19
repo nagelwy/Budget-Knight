@@ -55,7 +55,7 @@ app.post('/api/password-reset', async (req, res, next) => {
       from: 'ucfBudgetKnight@gmail.com',
       subject: 'Password Reset Request',
       text: 'Please click on the link to reset your password:',
-      html: `<p>Please click <a href="http://localhost:3000/reset/${token}">here</a> to reset your password.</p>`,
+      html: `<p>Please click <a href="http://budgetknight.herokuapp.com/reset/${token}">here</a> to reset your password.</p>`,
     };
 
     await sgMail.send(msg);
@@ -123,7 +123,7 @@ app.post('/api/verification', async (req, res, next) => {
       from: 'ucfBudgetKnight@gmail.com',
       subject: 'Verification Email',
       text: 'Please click on the link to verify your email address:',
-      html: `<a href="http://localhost:5000/verify?email=${email}&token=${token}">https://http://localhost:5000/verify?email=${email}&token=${token}</a>`,
+      html: `<a href="http://budgetknight.herokuapp.com/verify?email=${email}&token=${token}">https://http://budgetknight.herokuapp.com/verify?email=${email}&token=${token}</a>`,
     };
 
     await sgMail.send(msg);
