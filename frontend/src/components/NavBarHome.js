@@ -26,7 +26,7 @@ function NavBarHome() {
             <a href="#home">Home</a>
             <a href="#mission">Mission</a>
             <a href="#services">Services</a>
-            <a href="#contact">Contact Us</a>
+            {/* <a href="#contact">Contact Us</a> */}
                 <button className = "login-btn" onClick={goToLogIn}> 
                 Log in
                 </button>

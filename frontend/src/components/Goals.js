@@ -13,6 +13,7 @@ function Goals()
     var goalData = JSON.parse(localStorage.getItem('goal_data'));
 
 
+
     // Used to check if the user already has a goal
     // cpdateGoal: if(user has goal) hasGoal = 1
     // if(user does not have a goal) hasGoal = 0
@@ -100,8 +101,9 @@ function Goals()
             else
             {
                 console.log("Goal has been added!");
-                setReload(!reload);
-                setShowForm(false);
+                // setReload(!reload);
+                // setShowForm(false);
+                window.location.reload();
             }
         }   
         catch(e)
@@ -230,7 +232,8 @@ function Goals()
             else
             {
                 console.log("Goal has been deleted!");
-                setReload(!reload);
+                // setReload(!reload);
+                window.location.reload();
             }
         }   
         catch(e)

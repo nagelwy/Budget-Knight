@@ -51,7 +51,8 @@ function Register()
             }
             else
             {
-                setMessage("User has been added!");
+                doVerification();
+                setMessage("Check you email, a verification email has been sent!");
             }
         }   
         catch(e)
@@ -59,6 +60,36 @@ function Register()
             setMessage(e.toString());
         }
     };
+
+
+    const doVerification = async event =>
+    {
+
+        var obj = {
+            email:newEmail.value
+        };
+        const js = JSON.stringify(obj);
+
+        try {
+          const response = await fetch(buildPath('api/verification'), {
+            method: 'POST',
+            body: js,
+            headers: { 'Content-Type': 'application/json' },
+          });
+    
+          const res = await response.json();
+    
+          if (response.status === 200) {
+            setMessage(res.message);
+          } else {
+            setMessage(res.error);
+          }
+        } catch (err) {
+          console.error(err);
+          setMessage('Failed to send verification email');
+        }
+      };
+    
 
     return(
         <div className="login-div">

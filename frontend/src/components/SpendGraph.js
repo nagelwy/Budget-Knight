@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+
 import {
     BarChart,
     Bar,
@@ -16,7 +17,7 @@ import {
   } from 'recharts';
   import "./spendgraph.css";
 
-function SpendGraph({ updateFlag })
+function SpendGraph({  })
 {
 
     const [categoryTotals, setCategoryTotals] = useState([]);
@@ -39,7 +40,7 @@ function SpendGraph({ updateFlag })
 
     useEffect(() => {
     fetchCategoryTotals();
-    }, [updateFlag]);
+    }, []);
 
 
     const CustomizedAxisTick = (props) => {

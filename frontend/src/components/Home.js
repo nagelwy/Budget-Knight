@@ -60,7 +60,7 @@ function Home () {
                     </div>
             </div>
             </section>
-            <section className = "contact" id = "contact"> Contact Us </section>
+            {/* <section className = "contact" id = "contact"> Contact Us </section> */}
         </div>
     </div>
     )

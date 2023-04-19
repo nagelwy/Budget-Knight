@@ -30,6 +30,8 @@ sgMail.setApiKey(process.env.API_KEY);
 const jwt = require('jsonwebtoken');
 const secretKey = 'test';
 
+const crypto = require('crypto');
+
 app.post('/api/password-reset', async (req, res, next) => {
   const { email } = req.body;
 
@@ -41,7 +43,10 @@ app.post('/api/password-reset', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const token = jwt.sign({ email }, secretKey, { expiresIn: '1h' });
+    const token = crypto.randomBytes(20).toString('hex');
+
+    const tokenExpiration = new Date();
+    tokenExpiration.setHours(tokenExpiration.getHours() + 1); // Set expiration time to 1 hour from now
 
     await db.collection('Users').updateOne({ Mail: email }, { $set: { JWToken: token } });
 
@@ -50,7 +55,7 @@ app.post('/api/password-reset', async (req, res, next) => {
       from: 'ucfBudgetKnight@gmail.com',
       subject: 'Password Reset Request',
       text: 'Please click on the link to reset your password:',
-      html: `<p>Please click <a href="http://localhost:3000/reset/${token}">here</a> to reset your password.</p>`
+      html: `<p>Please click <a href="http://localhost:3000/reset/${token}">here</a> to reset your password.</p>`,
     };
 
     await sgMail.send(msg);
@@ -61,6 +66,8 @@ app.post('/api/password-reset', async (req, res, next) => {
     res.status(500).json({ error: 'Failed to send password reset email' });
   }
 });
+
+// html: `<p>Please click <a href="http://localhost:3000/reset/${token}">here</a> to reset your password.</p>`,
 
 app.post('/api/password/reset/:token', async (req, res, next) => {
   const { token } = req.params;
@@ -74,28 +81,18 @@ app.post('/api/password/reset/:token', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    if (user.resetToken !== token) {
-      return res.status(401).send('Invalid or expired token');
+    if (user.JWToken !== token) {
+      return res.status(401).json({ error: 'AInvalid or expired token' });
     }
 
-    jwt.verify(token, secretKey, async (err, decoded) => {
-      if (err) {
-        console.error(err);
-        return res.status(401).send('Invalid or expired token');
-      }
+    const now = new Date();
+    if (user.tokenExpiration < now) {
+      return res.status(401).json({ error: 'Token expired' });
+    }
 
-      try {
-        if (decoded.email === email) {
-          await db.collection('Users').updateOne({ Mail: email }, { $set: { Password: password } });
-          return res.status(200).send('Password updated');
-        } else {
-          return res.status(401).send('Invalid token');
-        }
-      } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to update user');
-      }
-    });
+    await db.collection('Users').updateOne({ Mail: email }, { $set: { Password: password } });
+    return res.status(200).json({ message: 'Password updated' });
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Failed to reset password');
@@ -632,3 +629,4 @@ app.listen(PORT, () =>
 });
 
 module.exports = express.Router();
+// module.exports = app;

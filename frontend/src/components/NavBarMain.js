@@ -24,6 +24,34 @@ const NavBarMain = ({}) =>{
         }
     });
 
+    const [reload, setReload] = useState(false);
+
+    // useEffect(() => {
+    //   getCurrentBalance();
+    // }, [reload]);
+  
+    // const [currentBal,setCurrentBal] = useState();
+  
+    // const getCurrentBalance = async event =>
+    // {
+  
+    //     const parsedEmail = userData.email;
+  
+    //     try
+    //     {
+    //         const response = await fetch(buildPath(`api/currentbalance?email=${parsedEmail}`),
+    //         {method:'GET',headers:{'Content-Type': 'application/json'}});
+  
+    //         let res = await response.json();
+    //         setCurrentBal(res)
+  
+    //     }   
+    //     catch(e)
+    //     {
+    //         console.log(e.toString());
+    //     }
+    // }
+
     // console.log(userData.firstName);
     // console.log(userData.currentBalance);
 

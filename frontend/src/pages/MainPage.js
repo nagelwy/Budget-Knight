@@ -10,21 +10,21 @@ import './mainpage.css'
 const MainPage = () =>
 {
   // const [currentBalance, setCurrentBalance] = useState(0);
-  const [graphUpdateFlag, setGraphUpdateFlag] = useState(false);
+  // const [graphUpdateFlag, setGraphUpdateFlag] = useState(false);
 
-  const updateGraph = () => {
-    setGraphUpdateFlag(!graphUpdateFlag); // Toggle the flag to trigger an update
-  };
+  // const updateGraph = () => {
+  //   setGraphUpdateFlag(!graphUpdateFlag); // Toggle the flag to trigger an update
+  // };
     return (
         <div>
           <NavBar />
           <div className="container">
             <div className="left-column" style={{border: '2px solid #AEDD97'}}>
-              <Transactions onTransactionChange={updateGraph} />
+              <Transactions  />
             </div>
             <div className="right-column">
               <div className="top-row" style={{border: '2px solid #AEDD97'}}>
-                <Goals updateFlag={graphUpdateFlag}/>
+                <Goals />
               </div>
               <div className="bottom-row">
                 <SpendGraph />

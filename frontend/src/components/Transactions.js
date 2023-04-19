@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 // import { Double, ObjectId } from 'mongodb';
 import { useEffect } from 'react';
 
-function Transactions({ onTransacitonChange }) 
+function Transactions({  }) 
 {
   // Stores, firstName, lastName, email -> to access eg. userData.firstName
   var userData = JSON.parse(localStorage.getItem('user_data'));
@@ -23,7 +23,9 @@ function Transactions({ onTransacitonChange })
     const checkGoal = async event =>
     {
 
-        const parsedEmail = userData.email;
+
+      const parsedEmail = userData ? userData.email : '';
+
 
         try
         {
@@ -66,15 +68,21 @@ function Transactions({ onTransacitonChange })
 
   const addTransaction = async event =>
   {
+
     event.preventDefault();
 
-    const emailFE = userData.email;
+    const emailFE = userData ? userData.email : '';
     const nameFE = event.target.transactionName.value;
     const amountFE = event.target.transactionAmount.value;
     const categoryFE = event.target.transactionCategory.value;
     const dateFE = event.target.transactionDate.value;
 
     const parsedAmount = parseFloat(amountFE, 10);
+
+    // let nameFE;
+    // let amountFE;
+    // let categoryFE;
+    // let dateFE
 
     var obj = {
       email: emailFE,
@@ -109,7 +117,7 @@ function Transactions({ onTransacitonChange })
         localStorage.setItem("user_data", JSON.stringify(userData));
         // loadTransactions();
         window.location.reload();
-        onTransacitonChange();
+        // onTransacitonChange();
       }
     }   
     catch(e)
@@ -151,7 +159,7 @@ function Transactions({ onTransacitonChange })
         localStorage.setItem("user_data", JSON.stringify(userData));
         window.location.reload();
         // loadTransactions();
-        onTransacitonChange();
+        // onTransacitonChange();
       }
     } catch (e) {
       console.log(e.toString());
@@ -160,7 +168,9 @@ function Transactions({ onTransacitonChange })
 
   const loadTransactions = async event =>
   {
-    const email = userData.email;
+
+    console.log('loadTransactions - fetch is called');
+    const email = userData ? userData.email : '';
   
     try {
       const response = await fetch(`/api/loadtransactions?email=${email}`);
@@ -223,13 +233,13 @@ function Transactions({ onTransacitonChange })
                 <span className="head-name">Transactions:</span>
             </div>
             <div className="add-btn">
-                <button className="fa fa-plus" onClick={() => setShowForm(prevState =>  !prevState)}></button>
+                <button className="fa fa-plus" aria-label="Add transaction" onClick={() => setShowForm(prevState =>  !prevState)}></button>
             </div>
         </div>
         {showForm && (
           
             <form className={`transaction-form  ${showForm ? 'show-form' : ''}`} onSubmit={addTransaction}>
-                <label htmlFor="name">Name:</label>
+                <label htmlFor="transactionName">Name:</label>
                 <input
                 type="text"
                 id="transactionName"
@@ -238,7 +248,7 @@ function Transactions({ onTransacitonChange })
                 // onChange={handleInputChange}
                 required
                 />
-                <label htmlFor="amount">Amount:</label>
+                <label htmlFor="transactionAmount">Amount:</label>
                 <input
                 type="number"
                 id="transactionAmount"
@@ -248,7 +258,7 @@ function Transactions({ onTransacitonChange })
                 // onChange={handleInputChange}
                 required
                 />
-                <label htmlFor="category">Category:</label>
+                <label htmlFor="transactionCategory">Category:</label>
                 <select
                 id="transactionCategory"
                 name="transactionCategory"
@@ -265,7 +275,7 @@ function Transactions({ onTransacitonChange })
                 <option value="Income">Income</option>
                 {hasGoal > 0 && <option value="Goal">Goal</option>}
                 </select>
-                <label htmlFor="date">Date:</label>
+                <label htmlFor="transactionDate">Date:</label>
                 <input
                 type="date"
                 id="transactionDate"
@@ -275,7 +285,7 @@ function Transactions({ onTransacitonChange })
                 required
                 />
                 <div className='trans-btn-div'>
-                  <button type="submit">Add</button>
+                  <button aria-label="Add transaction" type="submit">Add</button>
                   <button type="button" onClick={handleCancelClick}>Cancel</button>
                 </div>
             </form>

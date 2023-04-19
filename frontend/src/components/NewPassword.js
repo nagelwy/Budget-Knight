@@ -1,29 +1,53 @@
 import "./login.css";
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import {useContext} from 'react';
+import { Link, useParams } from 'react-router-dom';
 
-function NewPassword()
-{
-
-
+function NewPassword() {
+  let newPass;
+  let newPassRe;
   let loginEmail;
-  let loginPassword;
+  const { token } = useParams();
+  const [message, setMessage] = useState('');
 
-  const [message,setMessage] = useState('');
+  const app_name = 'budgetknight';
 
-  const app_name = 'budgetknight'
-  function buildPath(route)
-  {
-    if (process.env.NODE_ENV === 'production') 
-    {
-      return 'https://' + app_name +  '.herokuapp.com/' + route;
-    }
-    else
-    {        
+  function buildPath(route) {
+    if (process.env.NODE_ENV === 'production') {
+      return 'https://' + app_name + '.herokuapp.com/' + route;
+    } else {
       return 'http://localhost:5000/' + route;
     }
   }
+
+  const doPassStuff = async (event) => {
+    event.preventDefault();
+
+    if (newPass.value !== newPassRe.value) {
+      setMessage('Passwords do not match');
+      return;
+    }
+
+    var obj = { email: loginEmail.value, password: newPassRe.value };
+
+    var js = JSON.stringify(obj);
+
+    try {
+      const response = await fetch(buildPath(`api/password/reset/${token}`), {
+        method: 'POST',
+        body: js,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      var res = await response.json();
+      setMessage(res.message || res.error);
+      window.location.href = '/login';
+    } catch (e) {
+      console.log(e.toString());
+      return;
+    }
+  };
+
+
 
 
     return(
@@ -40,17 +64,19 @@ function NewPassword()
                     Type your new password
                 </h1>
 
-               <form>
+               <form onSubmit={doPassStuff}>
 
                 <br />
 
-                <input className="form-control" type="password" id="newPass" placeholder="Password"/>
+                <input className="form-control" type="text" id="loginEmail" placeholder="Email" ref={(c) => loginEmail = c}/>
 
-                <input className="form-control"type="password" id="newPassRe" placeholder="Re-type Password"/>
+                <input className="form-control" type="password" id="newPass" placeholder="Password" ref={(c) => newPass = c}/>
+
+                <input className="form-control"type="password" id="newPassRe" placeholder="Re-type Password" ref={(c) => newPassRe = c}/>
                 <br />
                 <span id="loginResult">{message}</span> 
                 <div className="btn-div">
-                    <input type="submit" id="loginButton" className="button" value = "Enter"/>
+                    <input type="submit" id="loginButton" className="button" value = "Enter" onClick={doPassStuff} />
                 </div>
 
                 <div className="log-link">
@@ -77,3 +103,4 @@ function NewPassword()
 };
 
 export default NewPassword;
+

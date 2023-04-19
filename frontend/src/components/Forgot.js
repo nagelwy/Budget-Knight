@@ -38,6 +38,7 @@ function Forgot()
       const response = await fetch(buildPath('api/password-reset'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
       
       var res = JSON.parse(await response.text());
+      setMessage("Email sent, containing password reset")
     }
     catch(e)
     {
@@ -67,9 +68,8 @@ function Forgot()
 
                 <br />
 
-                <input className="form-control" type="text" id="newEmail" placeholder=" Email address"/>
+                <input className="form-control" type="text" id="newEmail" placeholder=" Email address" ref={(c) => loginEmail = c}/>
 
-                <input className="form-control"type="password" id="loginPassword" placeholder=" Password"/>
                 <br />
                 <span id="loginResult">{message}</span> 
                 <div className="btn-div">
@@ -78,7 +78,6 @@ function Forgot()
                 </div>
 
                 <div className="log-link">
-                    <p id="login-redirect"><Link to="/new"><b>Proceed here when verified</b></Link> </p>
                     <p id="login-redirect"><Link to="/login"><b>Back to login</b></Link> </p>
                 </div>  
               
